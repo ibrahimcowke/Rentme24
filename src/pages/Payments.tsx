@@ -63,7 +63,7 @@ const Payments: React.FC = () => {
             <div className="p-2 bg-emerald-500/10 text-emerald-600 rounded-xl ring-4 ring-emerald-500/5">
               <DollarSign size={20} />
             </div>
-            <h1 className="text-3xl font-black tracking-tight">Payment <span className="text-emerald-600 italic">Cloud</span></h1>
+            <h1 className="text-3xl font-black tracking-tighter">Payment <span className="text-emerald-600 italic">Cloud</span></h1>
           </div>
           <p className="text-slate-500 font-medium">Digital ledger and real-time transaction monitoring.</p>
         </div>
@@ -258,7 +258,7 @@ const Payments: React.FC = () => {
             <input type="text" placeholder="e.g. TX-99281" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
           </div>
 
-          <button type="submit" className="w-full py-4 bg-emerald-600 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
+          <button type="submit" className="w-full py-4 bg-emerald-600 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
             Post To Ledger
           </button>
         </form>

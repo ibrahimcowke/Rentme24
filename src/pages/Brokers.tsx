@@ -45,7 +45,7 @@ const Brokers: React.FC = () => {
             <div className="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl ring-4 ring-indigo-500/5">
               <UserSquare2 size={20} />
             </div>
-            <h1 className="text-3xl font-black tracking-tight tracking-tighter">Broker <span className="text-indigo-600 italic">Network</span></h1>
+            <h1 className="text-3xl font-black tracking-tighter">Broker <span className="text-indigo-600 italic">Network</span></h1>
           </div>
           <p className="text-slate-500 font-medium">Coordinate with elite real estate professionals and monitor yields.</p>
         </div>
@@ -172,13 +172,13 @@ const Brokers: React.FC = () => {
             </div>
           </div>
 
-          <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-[1.5rem] border border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center text-center">
+          <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-3xl border border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center text-center">
              <Filter className="text-slate-300 mb-2" size={32} />
              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Commission Settings Strategy</p>
              <p className="text-xs text-slate-500 font-bold mt-1">Standard 5% Platform Flat Fee</p>
           </div>
 
-          <button type="submit" className="w-full py-4 bg-indigo-600 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-indigo-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
+          <button type="submit" className="w-full py-4 bg-indigo-600 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-indigo-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
             Initiate Partnership
           </button>
         </form>

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { 
-  Wrench, 
   Plus, 
   Clock, 
   AlertCircle, 
   CheckCircle2, 
   Hammer,
   ArrowRight,
-  Filter
+  Filter,
+  Wrench
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
@@ -39,7 +39,7 @@ const Maintenance: React.FC = () => {
             <div className="p-2 bg-amber-500/10 text-amber-600 rounded-xl ring-4 ring-amber-500/5">
               <Wrench size={20} />
             </div>
-            <h1 className="text-3xl font-black tracking-tight">Maintenance <span className="text-amber-600 italic">Grid</span></h1>
+            <h1 className="text-3xl font-black tracking-tighter">Maintenance <span className="text-amber-600 italic">Grid</span></h1>
           </div>
           <p className="text-slate-500 font-medium">Coordinate support requests and technical asset servicing.</p>
         </div>
@@ -199,7 +199,7 @@ const Maintenance: React.FC = () => {
             </div>
           </div>
 
-          <button type="submit" className="w-full py-4 bg-amber-600 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-amber-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
+          <button type="submit" className="w-full py-4 bg-amber-600 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-amber-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
             Dispatch Support
           </button>
         </form>

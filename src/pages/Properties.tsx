@@ -70,7 +70,7 @@ const Properties: React.FC = () => {
             <div className="p-2 bg-primary/10 text-primary rounded-xl ring-4 ring-primary/5">
               <Home size={20} />
             </div>
-            <h1 className="text-3xl font-black tracking-tight">Property <span className="text-primary italic">Vault</span></h1>
+            <h1 className="text-3xl font-black tracking-tighter">Property <span className="text-primary italic">Vault</span></h1>
           </div>
           <p className="text-slate-500 font-medium">Managing assets across Mogadishu's {MOGADISHU_DISTRICTS.length} Districts.</p>
         </div>
@@ -304,7 +304,7 @@ const Properties: React.FC = () => {
             </div>
           </div>
 
-          <button type="submit" className="w-full py-4 bg-primary text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
+          <button type="submit" className="w-full py-4 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
             Initialize Asset
           </button>
         </form>

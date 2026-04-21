@@ -97,7 +97,7 @@ const Tenants: React.FC = () => {
             <div className="p-2 bg-emerald-500/10 text-emerald-600 rounded-xl ring-4 ring-emerald-500/5">
               <Users size={20} />
             </div>
-            <h1 className="text-3xl font-black tracking-tight">Tenant <span className="text-emerald-600 italic">Registry</span></h1>
+            <h1 className="text-3xl font-black tracking-tighter">Tenant <span className="text-emerald-600 italic">Registry</span></h1>
           </div>
           <p className="text-slate-500 font-medium">Coordinate resident relationships and lease history records.</p>
         </div>
@@ -254,7 +254,7 @@ const Tenants: React.FC = () => {
             </div>
           </div>
 
-          <button type="submit" className="w-full py-4 bg-emerald-600 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
+          <button type="submit" className="w-full py-4 bg-emerald-600 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
             Onboard Resident
           </button>
         </form>

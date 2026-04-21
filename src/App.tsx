@@ -11,10 +11,13 @@ import Maintenance from './pages/Maintenance';
 import Reports from './pages/Reports';
 import './translations/i18n';
 
+import { ThemeProvider } from './contexts/ThemeContext';
+
 const App: React.FC = () => {
   return (
-    <Router>
-      <DashboardLayout>
+    <ThemeProvider>
+      <Router>
+        <DashboardLayout>
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/properties" element={<Properties />} />

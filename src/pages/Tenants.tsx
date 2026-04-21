@@ -97,25 +97,25 @@ const Tenants: React.FC = () => {
             <div className="p-2 bg-emerald-500/10 text-emerald-600 rounded-xl ring-4 ring-emerald-500/5">
               <Users size={20} />
             </div>
-            <h1 className="text-3xl font-black tracking-tighter">Tenant <span className="text-emerald-600 italic">Registry</span></h1>
+            <h1 className="text-3xl font-black tracking-tighter dark:text-white">Tenant <span className="text-emerald-600 italic">Registry</span></h1>
           </div>
-          <p className="text-slate-500 font-medium">Coordinate resident relationships and lease history records.</p>
+          <p className="text-slate-500 dark:text-slate-400 font-medium tracking-tight">Coordinate resident relationships and lease history records.</p>
         </div>
         
         <div className="flex items-center gap-4">
           <div className="relative group hidden sm:block">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" size={18} />
             <input 
               type="text" 
               placeholder="Search registry..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2.5 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all shadow-sm"
+              className="pl-10 pr-4 py-2.5 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all shadow-sm dark:text-slate-100"
             />
           </div>
           <button 
             onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-2xl hover:bg-blue-700 transition-all font-bold shadow-lg shadow-blue-500/20 whitespace-nowrap"
+            className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-2xl hover:bg-blue-700 transition-all font-bold shadow-lg shadow-blue-500/20 whitespace-nowrap glow-primary"
           >
             <Plus size={18} />
             <span>Add Tenant</span>
@@ -136,7 +136,7 @@ const Tenants: React.FC = () => {
                </div>
                <div>
                   <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">{stat.label}</p>
-                  <p className="text-2xl font-black">{stat.value}</p>
+                  <p className="text-2xl font-black dark:text-white uppercase tracking-tighter">{stat.value}</p>
                </div>
             </motion.div>
          ))}
@@ -163,14 +163,14 @@ const Tenants: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black tracking-tight group-hover:text-primary transition-colors">{tenant.name}</h3>
-                    <div className="flex items-center gap-2 mt-1 px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md w-fit">
+                    <h3 className="text-2xl font-black tracking-tight group-hover:text-emerald-500 transition-colors dark:text-white">{tenant.name}</h3>
+                    <div className="flex items-center gap-2 mt-1 px-2 py-0.5 bg-slate-100 dark:bg-slate-800/80 rounded-md w-fit">
                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Residential</span>
                     </div>
                   </div>
                 </div>
-                <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">
+                <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-100">
                    <MoreVertical size={20} />
                 </button>
               </div>
@@ -178,17 +178,17 @@ const Tenants: React.FC = () => {
               <div className="space-y-4 relative z-10">
                 <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl border border-slate-100/50 dark:border-slate-800/50">
                   <div className="flex items-center gap-3">
-                     <div className="p-2 bg-white dark:bg-slate-900 rounded-xl shadow-sm">
-                        <Home size={16} className="text-primary" />
+                     <div className="p-2 bg-white dark:bg-slate-900/50 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+                        <Home size={16} className="text-emerald-600" />
                      </div>
                      <div>
-                        <p className="text-xs font-black">{tenant.property}</p>
+                        <p className="text-xs font-black dark:text-slate-100">{tenant.property}</p>
                         <p className="text-[10px] font-bold text-slate-400">Unit {tenant.unit}</p>
                      </div>
                   </div>
                   <div className={cn(
                     "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border",
-                    tenant.paymentStatus === 'paid' ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-rose-50 text-rose-600 border-rose-100"
+                    tenant.paymentStatus === 'paid' ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 border-emerald-100 dark:border-emerald-500/20" : "bg-rose-50 dark:bg-rose-500/10 text-rose-600 border-rose-100 dark:border-rose-500/20"
                   )}>
                     {tenant.paymentStatus}
                   </div>
@@ -196,12 +196,12 @@ const Tenants: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center gap-3 p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl border border-slate-100/50 dark:border-slate-800/50 group/item hover:bg-white dark:hover:bg-slate-800 transition-all cursor-pointer">
-                     <Phone size={16} className="text-slate-400 group-hover/item:text-primary transition-colors" />
-                     <span className="text-[10px] font-black truncate">{tenant.phone}</span>
+                     <Phone size={16} className="text-slate-400 group-hover/item:text-emerald-500 transition-colors" />
+                     <span className="text-[10px] font-black truncate dark:text-slate-300">{tenant.phone}</span>
                   </div>
                   <div className="flex items-center gap-3 p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl border border-slate-100/50 dark:border-slate-800/50 group/item hover:bg-white dark:hover:bg-slate-800 transition-all cursor-pointer">
-                     <Mail size={16} className="text-slate-400 group-hover/item:text-primary transition-colors" />
-                     <span className="text-[10px] font-black truncate">Email</span>
+                     <Mail size={16} className="text-slate-400 group-hover/item:text-emerald-500 transition-colors" />
+                     <span className="text-[10px] font-black truncate dark:text-slate-300">Email</span>
                   </div>
                 </div>
               </div>
@@ -211,7 +211,7 @@ const Tenants: React.FC = () => {
                     <Calendar size={14} className="text-slate-400" />
                     <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Resident since {tenant.joinDate}</span>
                  </div>
-                 <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:translate-x-1 transition-all">
+                 <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:translate-x-1 transition-all">
                     Full Ledger <ArrowRight size={14} />
                  </button>
               </div>
@@ -225,36 +225,36 @@ const Tenants: React.FC = () => {
         <form onSubmit={handleAddTenant} className="space-y-6">
           <div className="space-y-2">
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Full Legal Name</label>
-            <input type="text" required placeholder="e.g. Hassan Ahmed" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+            <input type="text" required placeholder="e.g. Hassan Ahmed" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Primary Phone</label>
-              <input type="tel" required placeholder="+252..." className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+              <input type="tel" required placeholder="+252..." className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" />
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Email Address</label>
-              <input type="email" required placeholder="hassan@email.so" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+              <input type="email" required placeholder="hassan@email.so" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Property</label>
-              <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold appearance-none">
-                 <option>Villa Hodan</option>
-                 <option>Blue Sky Apt</option>
-                 <option>Commercial Hub</option>
+              <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold appearance-none dark:text-slate-100">
+                 <option className="bg-white dark:bg-slate-900">Villa Hodan</option>
+                 <option className="bg-white dark:bg-slate-900">Blue Sky Apt</option>
+                 <option className="bg-white dark:bg-slate-900">Commercial Hub</option>
               </select>
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Unit Number</label>
-              <input type="text" required placeholder="e.g. 402" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+              <input type="text" required placeholder="e.g. 402" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" />
             </div>
           </div>
 
-          <button type="submit" className="w-full py-4 bg-emerald-600 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
+          <button type="submit" className="w-full py-4 bg-emerald-600 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4 glow-primary">
             Onboard Resident
           </button>
         </form>

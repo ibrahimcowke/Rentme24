@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -21,6 +21,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'common.dashboard', path: '/' },
@@ -35,24 +36,9 @@ const sidebarItems = [
 
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    if (typeof window !== 'undefined') {
-      return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-    }
-    return 'light';
-  });
+  const { theme, toggleTheme, isDark } = useTheme();
   const { t, i18n } = useTranslation();
   const location = useLocation();
-
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
-
-  const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'so' : 'en';
@@ -87,12 +73,12 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               </div>
               {isSidebarOpen && (
                 <motion.div 
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="flex flex-col"
+                   initial={{ opacity: 0, x: -10 }}
+                   animate={{ opacity: 1, x: 0 }}
+                   className="flex flex-col"
                 >
-                  <span className="text-xl font-black tracking-tight text-gradient">GuriFlow</span>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 -mt-1">Pro Manager</span>
+                   <span className="text-xl font-black tracking-tight text-gradient">GuriFlow</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 -mt-1">Pro Manager</span>
                 </motion.div>
               )}
             </div>
@@ -158,7 +144,8 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
       </aside>
 
       <main className="flex-1 flex flex-col relative h-screen overflow-y-auto">
-        <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-primary/5 blur-[120px] pointer-events-none -z-10" />
+        {/* Cinematic Backdrop Bloom */}
+        <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-primary/5 dark:bg-primary/10 blur-[120px] pointer-events-none -z-10" />
 
         <header className="h-20 flex items-center justify-between px-8 sticky top-0 bg-white/70 dark:bg-[#060810]/70 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
            <div className="flex items-center gap-4">
@@ -178,14 +165,20 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
            </div>
 
            <div className="flex items-center gap-4">
+              {/* Premium Dark Mode Toggle */}
               <button 
                 onClick={toggleTheme}
-                className="p-2.5 bg-slate-100/50 dark:bg-slate-800/50 rounded-xl hover:bg-primary/10 hover:text-primary transition-all text-slate-500"
+                className="p-2.5 bg-slate-100/50 dark:bg-slate-800/50 rounded-xl hover:bg-primary/10 hover:text-primary transition-all text-slate-500 relative group"
               >
-                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+                {isDark ? (
+                  <Sun size={20} className="group-hover:rotate-45 transition-transform" />
+                ) : (
+                  <Moon size={20} className="group-hover:-rotate-12 transition-transform" />
+                )}
+                <span className="absolute inset-0 bg-primary/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
               </button>
 
-              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full border border-emerald-500/20">
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full border border-emerald-500/20">
                  <Sparkles size={14} className="animate-pulse" />
                  <span className="text-[10px] font-black uppercase tracking-wider">Sync Active</span>
               </div>
@@ -196,7 +189,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Master Associate</p>
                  </div>
                  <div className="w-10 h-10 rounded-[14px] bg-linear-to-tr from-primary to-indigo-500 p-0.5 shadow-lg shadow-primary/20">
-                    <div className="w-full h-full rounded-[12px] bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden">
+                    <div className="w-full h-full rounded-[12px] bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden border border-white/10">
                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Abdi" alt="User" />
                     </div>
                  </div>

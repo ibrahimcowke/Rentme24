@@ -47,30 +47,36 @@ const Modal: React.FC<ModalProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 lg:p-0"
           >
             {/* Modal Content */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              initial={{ opacity: 0, scale: 0.9, y: 40 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              exit={{ opacity: 0, scale: 0.9, y: 40 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
               className={cn(
-                "w-full bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-white/20 dark:border-slate-800/50 overflow-hidden relative",
+                "w-full bg-white dark:bg-[#0B1120] rounded-[3rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] border border-slate-200 dark:border-white/5 overflow-hidden relative",
                 maxWidthClasses[maxWidth]
               )}
             >
-              <div className="p-8">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-black tracking-tight">{title}</h2>
+              <div className="p-10">
+                <div className="flex items-center justify-between mb-10">
+                  <h2 className="text-3xl font-black tracking-tighter dark:text-white italic uppercase">{title}</h2>
                   <button 
                     onClick={onClose}
-                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all"
+                    className="p-3 bg-slate-100/50 dark:bg-slate-800/50 hover:bg-rose-500/10 hover:text-rose-500 dark:hover:bg-rose-500/20 dark:hover:text-rose-400 rounded-2xl transition-all shadow-sm"
                   >
-                    <X size={20} />
+                    <X size={20} strokeWidth={3} />
                   </button>
                 </div>
-                {children}
+                <div className="relative z-10">
+                   {children}
+                </div>
+                
+                {/* Decorative Bloom */}
+                <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-primary/20 blur-[100px] pointer-events-none -z-10 rounded-full opacity-50" />
               </div>
             </motion.div>
           </motion.div>

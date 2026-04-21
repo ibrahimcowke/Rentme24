@@ -1,12 +1,10 @@
 import React from 'react';
 import { 
   Building2, 
-  Users, 
   DollarSign, 
   TrendingUp, 
   Search,
   Bell,
-  ArrowUpRight,
   ShieldCheck,
   Zap,
   Activity,
@@ -111,7 +109,7 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Performance Chart */}
         <motion.div variants={itemVariants} className="lg:col-span-2 glass-card p-10 rounded-[3rem] border border-white/20 dark:border-slate-800/50 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-10 flex gap-4 hidden sm:flex">
+          <div className="absolute top-0 right-0 p-10 hidden sm:flex gap-4">
              <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
                 <span className="w-2 h-2 bg-primary rounded-full" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Revenue Stream</span>

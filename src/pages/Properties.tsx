@@ -129,7 +129,7 @@ const Properties: React.FC = () => {
                 <tr key={prop.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
+                      <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0">
                         <img src={prop.image} alt={prop.name} className="w-full h-full object-cover" />
                       </div>
                       <div>

@@ -10,15 +10,18 @@ import {
   Building2,
   Store,
   ArrowRight,
-  TrendingUp
+  TrendingUp,
+  Filter
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
+import { MOGADISHU_DISTRICTS } from '@/constants/districts';
 
 const mockProperties = [
   { id: 1, name: "Villa Hodan", code: "HOD-001", type: "house", district: "Hodan", rent: 500, status: "occupied", image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=600" },
   { id: 2, name: "Blue Sky Apartment", code: "WAD-042", type: "apartment", district: "Wadajir", rent: 350, status: "available", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600" },
-  { id: 3, name: "Commercial Hub", code: "XW-105", type: "office", district: "Xamar Weyne", rent: 1200, status: "occupied", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600" },
+  { id: 3, name: "Commercial Hub", code: "XW-105", type: "office", district: "Hamar-Weyne", rent: 1200, status: "occupied", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600" },
+  { id: 4, name: "Sunset Residence", code: "DAR-009", type: "house", district: "Darussalam", rent: 600, status: "available", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=600" },
 ];
 
 const containerVariants = {
@@ -37,6 +40,14 @@ const itemVariants = {
 const Properties: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState('All Districts');
+
+  const filteredProperties = mockProperties.filter(prop => {
+    const matchesSearch = prop.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                         prop.code.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesDistrict = selectedDistrict === 'All Districts' || prop.district === selectedDistrict;
+    return matchesSearch && matchesDistrict;
+  });
 
   return (
     <motion.div 
@@ -53,7 +64,7 @@ const Properties: React.FC = () => {
             </div>
             <h1 className="text-3xl font-black tracking-tight">Property <span className="text-primary italic">Vault</span></h1>
           </div>
-          <p className="text-slate-500 font-medium">Manage your entire real estate portfolio with real-time occupancy data.</p>
+          <p className="text-slate-500 font-medium">Managing assets across Mogadishu's {MOGADISHU_DISTRICTS.length} Districts.</p>
         </div>
         
         <div className="flex items-center gap-4">
@@ -88,14 +99,45 @@ const Properties: React.FC = () => {
         </div>
       </div>
 
+      {/* District Toolbar */}
+      <div className="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
+         <button 
+           onClick={() => setSelectedDistrict('All Districts')}
+           className={cn(
+             "px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all border whitespace-nowrap",
+             selectedDistrict === 'All Districts' 
+               ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" 
+               : "bg-white dark:bg-slate-900 text-slate-500 border-slate-200 dark:border-slate-800 hover:border-primary/50"
+           )}
+         >
+           All Districts
+         </button>
+         {MOGADISHU_DISTRICTS.map((d) => (
+            <button 
+              key={d}
+              onClick={() => setSelectedDistrict(d)}
+              className={cn(
+                "px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all border whitespace-nowrap",
+                selectedDistrict === d 
+                  ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" 
+                  : "bg-white dark:bg-slate-900 text-slate-500 border-slate-200 dark:border-slate-800 hover:border-primary/50"
+              )}
+            >
+              {d}
+            </button>
+         ))}
+      </div>
+
       {viewMode === 'grid' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <AnimatePresence>
-            {mockProperties.map((prop) => (
+          <AnimatePresence mode="popLayout">
+            {filteredProperties.map((prop) => (
               <motion.div 
                 layout
                 key={prop.id}
-                variants={itemVariants}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
                 whileHover={{ y: -5 }}
                 className="group glass-card rounded-4xl overflow-hidden border border-white/20 dark:border-slate-800/50 shadow-2xl relative"
               >
@@ -178,7 +220,7 @@ const Properties: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
-              {mockProperties.map((prop) => (
+              {filteredProperties.map((prop) => (
                 <tr key={prop.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-all group">
                   <td className="px-8 py-5">
                     <div className="flex items-center gap-5">
@@ -191,7 +233,7 @@ const Properties: React.FC = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="px-8 py-5 text-sm font-bold text-slate-600 dark:text-slate-400">{prop.district}, Magadishu</td>
+                  <td className="px-8 py-5 text-sm font-bold text-slate-600 dark:text-slate-400">{prop.district}, Mogadishu</td>
                   <td className="px-8 py-5">
                     <span className="text-lg font-black text-primary">${prop.rent.toLocaleString()}</span>
                   </td>

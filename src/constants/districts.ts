@@ -1,0 +1,22 @@
+export const MOGADISHU_DISTRICTS = [
+  "Abdiaziz",
+  "Bondhere",
+  "Daynile",
+  "Dharkenley",
+  "Hamar-Jajab",
+  "Hamar-Weyne",
+  "Heliwa",
+  "Hodan",
+  "Howlwadaag",
+  "Karan",
+  "Shangani",
+  "Shibis",
+  "Waberi",
+  "Wadajir",
+  "Warta Nabadda",
+  "Yaqshid",
+  "Gubadley",
+  "Kahda",
+  "Garaasbaley",
+  "Darussalam"
+];

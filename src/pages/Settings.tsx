@@ -14,12 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '../utils/cn';
 
 const Settings: React.FC = () => {
-  const { t, i18n } = useTranslation();
-
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'so' : 'en';
-    i18n.changeLanguage(newLang);
-  };
+  const { i18n } = useTranslation();
 
   return (
     <div className="max-w-4xl space-y-8 animate-in slide-in-from-bottom-4 duration-500">

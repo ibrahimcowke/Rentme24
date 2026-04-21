@@ -4,25 +4,11 @@ import {
   Search, 
   Filter, 
   MapPin, 
-  Home, 
-  Building, 
-  Store, 
   MoreVertical,
   LayoutGrid,
   List as ListIcon
 } from 'lucide-react';
 import { cn } from '../utils/cn';
-
-const districts = [
-  "Hodan", "Wadajir", "Dayniile", "Heliwaa", "Yaqshiid", "Karaan", "Shangaani", "Abdulaziz", "Bondhere", "Xamar Weyne", "Xamar Jajab"
-];
-
-const propertyTypes = [
-  { id: 'house', label: 'House', icon: Home },
-  { id: 'apartment', label: 'Apartment', icon: Building },
-  { id: 'office', label: 'Office', icon: Building },
-  { id: 'shop', label: 'Shop', icon: Store },
-];
 
 const mockProperties = [
   { id: 1, name: "Villa Hodan", code: "HOD-001", type: "house", district: "Hodan", rent: 500, status: "occupied", image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=400" },

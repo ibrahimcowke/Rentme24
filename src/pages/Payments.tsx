@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
-  CreditCard, 
   DollarSign, 
   Smartphone, 
   Building2, 
-  History,
   ArrowUpRight,
   Plus,
   Search,

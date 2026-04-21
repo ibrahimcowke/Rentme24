@@ -2,7 +2,7 @@ import { supabase } from './supabase';
 
 export const checkConnection = async () => {
   try {
-    const { data, error } = await supabase.from('profiles').select('count', { count: 'exact', head: true });
+    const { error } = await supabase.from('profiles').select('count', { count: 'exact', head: true });
     if (error) throw error;
     console.log('Supabase connection successful!');
     return true;

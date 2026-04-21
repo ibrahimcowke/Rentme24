@@ -1,6 +1,5 @@
 import React from 'react';
 import { 
-  UserSquare2, 
   TrendingUp, 
   Award, 
   Briefcase, 
@@ -10,7 +9,7 @@ import {
   MoreVertical,
   Star
 } from 'lucide-react';
-import { cn } from '../utils/cn';
+
 
 const mockBrokers = [
   { 

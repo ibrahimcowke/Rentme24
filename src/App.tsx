@@ -29,7 +29,8 @@ const App: React.FC = () => {
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </DashboardLayout>
-    </Router>
+      </Router>
+    </ThemeProvider>
   );
 };
 

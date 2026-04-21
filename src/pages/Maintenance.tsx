@@ -3,16 +3,9 @@ import {
   Wrench, 
   Plus, 
   Search, 
-  Filter, 
-  Clock, 
-  CheckCircle2, 
-  AlertCircle,
-  MoreVertical,
-  MapPin,
   User,
   ArrowRight,
-  Building2,
-  Activity
+  Building2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
@@ -29,12 +22,6 @@ const priorityColors = {
   high: 'bg-orange-500/10 text-orange-600 border-orange-500/20',
   medium: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
   low: 'bg-slate-500/10 text-slate-600 border-slate-500/20',
-};
-
-const statusIcons = {
-  pending: Clock,
-  'in-progress': Activity,
-  completed: CheckCircle2,
 };
 
 const Maintenance: React.FC = () => {

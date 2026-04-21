@@ -3,14 +3,12 @@ import {
   Users, 
   Search, 
   Plus, 
-  Filter, 
   Phone, 
   Mail, 
   Home, 
   MoreVertical,
   Calendar,
   CheckCircle2,
-  Clock,
   ArrowRight,
   TrendingUp,
   CreditCard
@@ -73,6 +71,11 @@ const itemVariants = {
 const Tenants: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
+  const filteredTenants = mockTenants.filter(t => 
+    t.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    t.property.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <motion.div 
       initial="hidden"
@@ -130,7 +133,7 @@ const Tenants: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
         <AnimatePresence>
-          {mockTenants.map((tenant) => (
+          {filteredTenants.map((tenant) => (
             <motion.div
               layout
               key={tenant.id}
@@ -205,7 +208,7 @@ const Tenants: React.FC = () => {
           ))}
         </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

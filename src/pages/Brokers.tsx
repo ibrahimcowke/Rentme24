@@ -12,8 +12,7 @@ import {
   Filter,
   ExternalLink
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/utils/cn';
+import { motion } from 'framer-motion';
 
 const mockBrokers = [
   { 
@@ -189,64 +188,62 @@ const Brokers: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <AnimatePresence>
-            {mockBrokers.map((broker) => (
-              <motion.div 
-                layout
-                key={broker.id} 
-                className="glass-card rounded-[2.5rem] p-8 border border-white/20 dark:border-slate-800/50 flex flex-col sm:flex-row gap-8 hover:shadow-2xl transition-all group relative overflow-hidden"
-              >
-                <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                   <button className="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl hover:text-primary"><ExternalLink size={16} /></button>
-                </div>
+          {mockBrokers.map((broker) => (
+            <motion.div 
+              layout
+              key={broker.id} 
+              className="glass-card rounded-[2.5rem] p-8 border border-white/20 dark:border-slate-800/50 flex flex-col sm:flex-row gap-8 hover:shadow-2xl transition-all group relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                 <button className="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl hover:text-primary"><ExternalLink size={16} /></button>
+              </div>
 
-                <div className="flex flex-col items-center">
-                  <div className="w-24 h-24 rounded-[2rem] bg-linear-to-tr from-primary to-indigo-500 p-1 mb-4 shadow-xl shadow-primary/20 group-hover:rotate-3 transition-transform duration-500">
-                     <div className="w-full h-full rounded-[1.75rem] bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden border-4 border-white dark:border-slate-900">
-                        <img src={broker.avatar} alt={broker.name} className="w-full h-full object-cover" />
-                     </div>
-                  </div>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 text-amber-600 rounded-xl border border-amber-500/20 shadow-sm shadow-amber-500/5">
-                    <Star size={14} fill="currentColor" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">{broker.score}</span>
-                  </div>
+              <div className="flex flex-col items-center">
+                <div className="w-24 h-24 rounded-[2rem] bg-linear-to-tr from-primary to-indigo-500 p-1 mb-4 shadow-xl shadow-primary/20 group-hover:rotate-3 transition-transform duration-500">
+                   <div className="w-full h-full rounded-[1.75rem] bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden border-4 border-white dark:border-slate-900">
+                      <img src={broker.avatar} alt={broker.name} className="w-full h-full object-cover" />
+                   </div>
                 </div>
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 text-amber-600 rounded-xl border border-amber-500/20 shadow-sm shadow-amber-500/5">
+                  <Star size={14} fill="currentColor" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">{broker.score}</span>
+                </div>
+              </div>
 
-                <div className="flex-1 space-y-6">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className="font-black text-2xl tracking-tight group-hover:text-primary transition-all">{broker.name}</h4>
-                      <div className="flex items-center gap-2 mt-1">
-                         <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                         <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Rate: {broker.rate}% commission</p>
-                      </div>
+              <div className="flex-1 space-y-6">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h4 className="font-black text-2xl tracking-tight group-hover:text-primary transition-all">{broker.name}</h4>
+                    <div className="flex items-center gap-2 mt-1">
+                       <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                       <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Rate: {broker.rate}% commission</p>
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                     <div className="p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-3xl border border-slate-100/50 dark:border-slate-800/50 group-hover:border-primary/20 transition-colors">
-                        <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Impact</p>
-                        <p className="text-xl font-black">{broker.deals} <span className="text-xs uppercase text-slate-400">Deals</span></p>
-                     </div>
-                     <div className="p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-3xl border border-slate-100/50 dark:border-slate-800/50 group-hover:border-primary/20 transition-colors">
-                        <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Generated</p>
-                        <p className="text-xl font-black text-primary">${broker.earnings.toLocaleString()}</p>
-                     </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 pt-2">
-                     <button className="flex-1 h-12 flex items-center justify-center gap-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-primary hover:text-white hover:border-primary transition-all group/btn shadow-sm">
-                        <Phone size={18} />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden sm:block">Call Agent</span>
-                     </button>
-                     <button className="w-12 h-12 flex items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
-                        <Mail size={18} />
-                     </button>
-                  </div>
                 </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+
+                <div className="grid grid-cols-2 gap-4">
+                   <div className="p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-3xl border border-slate-100/50 dark:border-slate-800/50 group-hover:border-primary/20 transition-colors">
+                      <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Impact</p>
+                      <p className="text-xl font-black">{broker.deals} <span className="text-xs uppercase text-slate-400">Deals</span></p>
+                   </div>
+                   <div className="p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-3xl border border-slate-100/50 dark:border-slate-800/50 group-hover:border-primary/20 transition-colors">
+                      <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Generated</p>
+                      <p className="text-xl font-black text-primary">${broker.earnings.toLocaleString()}</p>
+                   </div>
+                </div>
+
+                <div className="flex items-center gap-3 pt-2">
+                   <button className="flex-1 h-12 flex items-center justify-center gap-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-primary hover:text-white hover:border-primary transition-all group/btn shadow-sm">
+                      <Phone size={18} />
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden sm:block">Call Agent</span>
+                   </button>
+                   <button className="w-12 h-12 flex items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
+                      <Mail size={18} />
+                   </button>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </motion.div>
     </motion.div>

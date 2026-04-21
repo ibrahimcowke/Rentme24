@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { 
   Plus, 
   Search, 
-  Filter, 
   MapPin, 
   MoreVertical,
   LayoutGrid,
@@ -11,8 +10,7 @@ import {
   Building2,
   Store,
   ArrowRight,
-  TrendingUp,
-  Users
+  TrendingUp
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';

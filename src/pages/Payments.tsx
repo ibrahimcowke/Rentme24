@@ -7,16 +7,12 @@ import {
   Plus,
   Search,
   FileDown,
-  ArrowDownRight,
   CreditCard,
   History,
   TrendingUp,
-  Filter,
-  CheckCircle2,
-  Clock,
-  ArrowRight
+  Clock
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
 
 const transactions = [
@@ -41,6 +37,10 @@ const itemVariants = {
 
 const Payments: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'completed' | 'pending'>('all');
+
+  const filteredTransactions = transactions.filter(tx => 
+    filter === 'all' || tx.status === filter
+  );
 
   return (
     <motion.div 
@@ -125,7 +125,7 @@ const Payments: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
-                  {transactions.map((tx) => (
+                  {filteredTransactions.map((tx) => (
                     <tr key={tx.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-all group">
                       <td className="px-8 py-5">
                         <div className="flex items-center gap-4">
@@ -189,9 +189,7 @@ const Payments: React.FC = () => {
                        <History className="text-slate-400" size={20} />
                        <span className="text-sm font-black text-slate-400">Escrow Sync</span>
                     </div>
-                    <div className="w-10 h-5 bg-slate-200 dark:bg-slate-700 rounded-full p-1 flex justify-start transition-all cursor-pointer">
-                       <div className="w-3 h-3 bg-white rounded-full shadow-sm" />
-                    </div>
+                    <div className="w-10 h-5 bg-slate-200 dark:bg-slate-700 rounded-full p-1 flex justify-start transition-all cursor-pointer" />
                  </div>
               </div>
 
@@ -205,7 +203,7 @@ const Payments: React.FC = () => {
               <div className="pt-4 space-y-4">
                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Integrations</p>
                  <div className="flex gap-3">
-                    {['visa', 'mastercard', 'apple', 'mobile'].map((brand, i) => (
+                    {[0, 1, 2, 3].map((i) => (
                        <div key={i} className="flex-1 py-3 bg-slate-100 dark:bg-slate-800/50 rounded-xl flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity">
                           <CreditCard size={18} />
                        </div>

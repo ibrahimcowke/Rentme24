@@ -1,17 +1,16 @@
 import React from 'react';
 import { 
-  BarChart3, 
-  Download, 
-  TrendingUp, 
-  TrendingDown, 
   DollarSign, 
   Calendar,
   Filter,
-  PieChart as PieChartIcon,
-  ArrowUpRight,
-  FileText
+  FileText,
+  BarChart3,
+  Download,
+  TrendingUp,
+  TrendingDown
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { cn } from '@/utils/cn';
 import { 
   AreaChart, 
   Area, 
@@ -38,8 +37,8 @@ const revenueData = [
 
 const distributionData = [
   { name: 'Residential', value: 65, color: '#2563EB' },
-  { month: 'Commercial', value: 25, color: '#10B981' },
-  { month: 'Industrial', value: 10, color: '#F59E0B' },
+  { name: 'Commercial', value: 25, color: '#10B981' },
+  { name: 'Industrial', value: 10, color: '#F59E0B' },
 ];
 
 const Reports: React.FC = () => {
@@ -68,7 +67,6 @@ const Reports: React.FC = () => {
         </div>
       </div>
 
-      {/* Financial Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
           { title: 'Total Revenue', value: '$328,500', trend: '+12.5%', isUp: true, icon: TrendingUp },
@@ -96,7 +94,6 @@ const Reports: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Main Revenue Chart */}
         <div className="glass-card p-8 rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 flex gap-2">
              <button className="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl hover:text-indigo-600 transition-all"><Filter size={18} /></button>
@@ -126,7 +123,6 @@ const Reports: React.FC = () => {
           </div>
         </div>
 
-        {/* Portfolio Expenses */}
         <div className="glass-card p-8 rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 shadow-2xl">
            <h3 className="text-xl font-black mb-10 italic">Quarterly Expenses</h3>
            <div className="h-[350px] w-full">
@@ -146,7 +142,6 @@ const Reports: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-         {/* Portfolio Mix */}
          <div className="glass-card p-8 rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 shadow-2xl flex flex-col items-center">
             <h3 className="text-xl font-black w-full text-left italic mb-6">Asset Allocation</h3>
             <div className="h-[250px] w-full">
@@ -171,14 +166,13 @@ const Reports: React.FC = () => {
             <div className="w-full space-y-3 mt-4">
                {distributionData.map((item, i) => (
                   <div key={i} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
-                     <span className="text-xs font-black">{item.name || distributionData[i].month}</span>
+                     <span className="text-xs font-black">{item.name}</span>
                      <span className="text-xs font-black text-slate-500">{item.value}%</span>
                   </div>
                ))}
             </div>
          </div>
 
-         {/* Recent Reports List */}
          <div className="lg:col-span-2 glass-card p-8 rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 shadow-2xl">
             <div className="flex items-center justify-between mb-8">
                <h3 className="text-xl font-black italic">Recent Exports</h3>

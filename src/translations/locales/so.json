@@ -1,0 +1,33 @@
+{
+  "common": {
+    "dashboard": "Guddi Maamulka",
+    "properties": "Guryaha",
+    "tenants": "Kiraystayaasha",
+    "payments": "Lacag Bixinta",
+    "maintenance": "Dayactirka",
+    "brokers": "Dilaaliinta",
+    "reports": "Warbixinnada",
+    "settings": "Habsameynta",
+    "logout": "Ka Bax",
+    "search": "Raadi...",
+    "notifications": "Ogaysiisyada"
+  },
+  "dashboard": {
+    "welcome": "Ku soo dhowaad, Maamule!",
+    "overview": "Guudmar guud ee guryahaaga",
+    "kpi": {
+      "total_properties": "Wadarta Guryaha",
+      "occupied_units": "Guryaha la degan yahay",
+      "vacant_units": "Guryaha banaan",
+      "monthly_income": "Dakhliga Bisha",
+      "pending_payments": "Lagu leeyahay",
+      "maintenance_requests": "Dayactir",
+      "expiring_contracts": "Heshiis Galaya",
+      "broker_earnings": "Dakhliga Dilaalka"
+    },
+    "charts": {
+      "revenue": "Dakhliga Guud",
+      "occupancy": "Heerka Deganaanshaha"
+    }
+  }
+}

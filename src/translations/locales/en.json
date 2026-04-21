@@ -1,0 +1,33 @@
+{
+  "common": {
+    "dashboard": "Dashboard",
+    "properties": "Properties",
+    "tenants": "Tenants",
+    "payments": "Payments",
+    "maintenance": "Maintenance",
+    "brokers": "Brokers",
+    "reports": "Reports",
+    "settings": "Settings",
+    "logout": "Logout",
+    "search": "Search...",
+    "notifications": "Notifications"
+  },
+  "dashboard": {
+    "welcome": "Welcome back, Admin!",
+    "overview": "Overview of your rental empire",
+    "kpi": {
+      "total_properties": "Total Properties",
+      "occupied_units": "Occupied Units",
+      "vacant_units": "Vacant Units",
+      "monthly_income": "Monthly Income",
+      "pending_payments": "Pending",
+      "maintenance_requests": "Maintenance",
+      "expiring_contracts": "Expiring Soon",
+      "broker_earnings": "Broker Earnings"
+    },
+    "charts": {
+      "revenue": "Revenue Overview",
+      "occupancy": "Occupancy Rate"
+    }
+  }
+}

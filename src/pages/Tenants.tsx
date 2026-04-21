@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
+import Modal from '@/components/Modal';
 
 const mockTenants = [
   { 
@@ -70,11 +71,18 @@ const itemVariants = {
 
 const Tenants: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const filteredTenants = mockTenants.filter(t => 
     t.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     t.property.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleAddTenant = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsAddModalOpen(false);
+    alert('Tenant record successfully committed to the registry.');
+  };
 
   return (
     <motion.div 
@@ -105,7 +113,10 @@ const Tenants: React.FC = () => {
               className="pl-10 pr-4 py-2.5 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all shadow-sm"
             />
           </div>
-          <button className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-2xl hover:bg-blue-700 transition-all font-bold shadow-lg shadow-blue-500/20 whitespace-nowrap">
+          <button 
+            onClick={() => setIsAddModalOpen(true)}
+            className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-2xl hover:bg-blue-700 transition-all font-bold shadow-lg shadow-blue-500/20 whitespace-nowrap"
+          >
             <Plus size={18} />
             <span>Add Tenant</span>
           </button>
@@ -208,6 +219,46 @@ const Tenants: React.FC = () => {
           ))}
         </AnimatePresence>
       </div>
+
+      {/* Add Tenant Modal */}
+      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="Add New Resident">
+        <form onSubmit={handleAddTenant} className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Full Legal Name</label>
+            <input type="text" required placeholder="e.g. Hassan Ahmed" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Primary Phone</label>
+              <input type="tel" required placeholder="+252..." className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Email Address</label>
+              <input type="email" required placeholder="hassan@email.so" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Property</label>
+              <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold appearance-none">
+                 <option>Villa Hodan</option>
+                 <option>Blue Sky Apt</option>
+                 <option>Commercial Hub</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Unit Number</label>
+              <input type="text" required placeholder="e.g. 402" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+            </div>
+          </div>
+
+          <button type="submit" className="w-full py-4 bg-emerald-600 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
+            Onboard Resident
+          </button>
+        </form>
+      </Modal>
     </motion.div>
   );
 };

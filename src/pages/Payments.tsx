@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
+import Modal from '@/components/Modal';
 
 const transactions = [
   { id: 'PAY-771', tenant: 'Ali Omar', property: 'Villa Hodan', amount: 500, type: 'rent', method: 'Mobile Money', date: '2024-03-20', status: 'completed' },
@@ -37,10 +38,17 @@ const itemVariants = {
 
 const Payments: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'completed' | 'pending'>('all');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const filteredTransactions = transactions.filter(tx => 
     filter === 'all' || tx.status === filter
   );
+
+  const handlePostPayment = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsAddModalOpen(false);
+    alert('Payment successfully posted to the digital ledger.');
+  };
 
   return (
     <motion.div 
@@ -69,7 +77,10 @@ const Payments: React.FC = () => {
               className="pl-10 pr-4 py-2.5 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all shadow-sm"
             />
           </div>
-          <button className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 text-white rounded-2xl hover:bg-emerald-700 transition-all font-bold shadow-lg shadow-emerald-500/20 whitespace-nowrap">
+          <button 
+            onClick={() => setIsAddModalOpen(true)}
+            className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 text-white rounded-2xl hover:bg-emerald-700 transition-all font-bold shadow-lg shadow-emerald-500/20 whitespace-nowrap"
+          >
             <Plus size={18} />
             <span>Post Payment</span>
           </button>
@@ -213,6 +224,45 @@ const Payments: React.FC = () => {
            </div>
         </motion.div>
       </div>
+
+      {/* Post Payment Modal */}
+      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="Post New Transaction">
+        <form onSubmit={handlePostPayment} className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Select Resident</label>
+            <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold appearance-none">
+                 <option>Ali Omar (Villa Hodan)</option>
+                 <option>Hafsa Ahmed (Blue Sky Apt)</option>
+                 <option>Khalid Yusuf (Commercial Hub)</option>
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Payment Method</label>
+              <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold appearance-none">
+                 <option>Mobile Money (EVC Plus)</option>
+                 <option>e-Dahab</option>
+                 <option>Bank Transfer</option>
+                 <option>Cash</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Amount ($)</label>
+              <input type="number" required placeholder="500" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Transaction Ref (Optional)</label>
+            <input type="text" placeholder="e.g. TX-99281" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+          </div>
+
+          <button type="submit" className="w-full py-4 bg-emerald-600 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
+            Post To Ledger
+          </button>
+        </form>
+      </Modal>
     </motion.div>
   );
 };

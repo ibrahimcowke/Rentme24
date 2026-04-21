@@ -10,11 +10,12 @@ import {
   Building2,
   Store,
   ArrowRight,
-  TrendingUp
+  TrendingUp,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import { MOGADISHU_DISTRICTS } from '@/constants/districts';
+import Modal from '@/components/Modal';
 
 const mockProperties = [
   { id: 1, name: "Villa Hodan", code: "HOD-001", type: "house", district: "Hodan", rent: 500, status: "occupied", image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=600" },
@@ -40,6 +41,7 @@ const Properties: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('All Districts');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const filteredProperties = mockProperties.filter(prop => {
     const matchesSearch = prop.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -47,6 +49,13 @@ const Properties: React.FC = () => {
     const matchesDistrict = selectedDistrict === 'All Districts' || prop.district === selectedDistrict;
     return matchesSearch && matchesDistrict;
   });
+
+  const handleAddAsset = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Simulate save
+    setIsAddModalOpen(false);
+    alert('Asset successfully provisioned in the registry.');
+  };
 
   return (
     <motion.div 
@@ -91,7 +100,10 @@ const Properties: React.FC = () => {
               <ListIcon size={18} />
             </button>
           </div>
-          <button className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-2xl hover:bg-blue-700 transition-all font-bold shadow-lg shadow-blue-500/20 whitespace-nowrap">
+          <button 
+            onClick={() => setIsAddModalOpen(true)}
+            className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-2xl hover:bg-blue-700 transition-all font-bold shadow-lg shadow-blue-500/20 whitespace-nowrap"
+          >
             <Plus size={18} />
             <span>Add Asset</span>
           </button>
@@ -255,6 +267,48 @@ const Properties: React.FC = () => {
           </table>
         </motion.div>
       )}
+
+      {/* Add Asset Modal */}
+      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="New Asset Provisioning">
+        <form onSubmit={handleAddAsset} className="space-y-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Asset Name</label>
+              <input type="text" required placeholder="e.g. Ocean View" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Unique Code</label>
+              <input type="text" required placeholder="e.g. OV-101" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">District</label>
+            <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold appearance-none">
+               {MOGADISHU_DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Asset Type</label>
+              <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold appearance-none">
+                 <option value="house">Residential House</option>
+                 <option value="apartment">Apartment Suite</option>
+                 <option value="office">Commercial Office</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Monthly Rent ($)</label>
+              <input type="number" required placeholder="450" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+            </div>
+          </div>
+
+          <button type="submit" className="w-full py-4 bg-primary text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
+            Initialize Asset
+          </button>
+        </form>
+      </Modal>
     </motion.div>
   );
 };

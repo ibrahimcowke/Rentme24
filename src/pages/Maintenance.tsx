@@ -2,155 +2,208 @@ import React, { useState } from 'react';
 import { 
   Wrench, 
   Plus, 
-  Search, 
-  User,
+  Clock, 
+  AlertCircle, 
+  CheckCircle2, 
+  Hammer,
   ArrowRight,
-  Building2
+  Filter
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
+import Modal from '@/components/Modal';
 
 const tickets = [
-  { id: 'TIC-001', title: 'Leaking Pipe', property: 'Villa Hodan', unit: 'B-402', tenant: 'Ali Omar', priority: 'critical', status: 'pending', date: '2024-03-20', description: 'Water leaking from kitchen sink.' },
-  { id: 'TIC-002', title: 'AC Not Working', property: 'Blue Sky Apt', unit: '302', tenant: 'Hafsa Ahmed', priority: 'high', status: 'in-progress', date: '2024-03-19', description: 'The AC unit in the master bedroom is not cooling.' },
-  { id: 'TIC-003', title: 'Broken Window', property: 'Commercial Hub', unit: '10', tenant: 'Khalid Yusuf', priority: 'medium', status: 'completed', date: '2024-03-18', description: 'Window pane shattered during storm.' },
-  { id: 'TIC-004', title: 'Light Flicker', property: 'Villa Hodan', unit: 'A-101', tenant: 'Zahra Hassan', priority: 'low', status: 'pending', date: '2024-03-17', description: 'Hallway light flickers constantly.' },
+  { id: 'TKT-101', property: 'Villa Hodan', issue: 'Leaking pipe in kitchen', priority: 'high', status: 'pending', date: '2h ago', technician: 'Ahmed' },
+  { id: 'TKT-102', property: 'Blue Sky Apt', issue: 'AC unit not functional', priority: 'medium', status: 'in-progress', date: '5h ago', technician: 'Mohamed' },
+  { id: 'TKT-103', property: 'Commercial Hub', issue: 'elevator inspection', priority: 'low', status: 'completed', date: 'Yesterday', technician: 'Yasin' },
 ];
-
-const priorityColors = {
-  critical: 'bg-rose-500/10 text-rose-600 border-rose-500/20',
-  high: 'bg-orange-500/10 text-orange-600 border-orange-500/20',
-  medium: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-  low: 'bg-slate-500/10 text-slate-600 border-slate-500/20',
-};
 
 const Maintenance: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'pending' | 'in-progress' | 'completed'>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const filteredTickets = tickets.filter(t => {
-    const matchesFilter = filter === 'all' || t.status === filter;
-    const matchesSearch = t.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         t.property.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         t.id.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesFilter && matchesSearch;
-  });
+  const filteredTickets = tickets.filter(t => filter === 'all' || t.status === filter);
+
+  const handleCreateTicket = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsAddModalOpen(false);
+    alert('Support ticket successfully dispatched to the technician pool.');
+  };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700">
+    <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-700 pb-12">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-primary/10 text-primary rounded-xl ring-4 ring-primary/5">
+            <div className="p-2 bg-amber-500/10 text-amber-600 rounded-xl ring-4 ring-amber-500/5">
               <Wrench size={20} />
             </div>
-            <h1 className="text-3xl font-black tracking-tight">Maintenance <span className="text-primary italic">Vault</span></h1>
+            <h1 className="text-3xl font-black tracking-tight">Maintenance <span className="text-amber-600 italic">Grid</span></h1>
           </div>
-          <p className="text-slate-500 font-medium">Manage and monitor all facility requests in real-time.</p>
+          <p className="text-slate-500 font-medium">Coordinate support requests and technical asset servicing.</p>
         </div>
         
-        <div className="flex items-center gap-4">
-          <div className="relative group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search tickets..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2.5 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all shadow-sm"
-            />
+        <div className="flex items-center gap-3">
+          <div className="flex bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800/50">
+             {['all', 'pending', 'in-progress', 'completed'].map((f) => (
+               <button 
+                 key={f}
+                 onClick={() => setFilter(f as any)}
+                 className={cn(
+                   "px-4 py-2 rounded-xl text-[10px] font-black uppercase transition-all whitespace-nowrap",
+                   filter === f ? "bg-white dark:bg-slate-700 text-amber-600 shadow-md" : "text-slate-400"
+                 )}
+               >
+                 {f.replace('-', ' ')}
+               </button>
+             ))}
           </div>
-          <button className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-2xl hover:bg-blue-700 transition-all font-bold shadow-lg shadow-blue-500/20">
+          <button 
+            onClick={() => setIsAddModalOpen(true)}
+            className="flex items-center gap-2 px-6 py-2.5 bg-amber-600 text-white rounded-2xl hover:bg-amber-700 transition-all font-bold shadow-lg shadow-amber-500/20"
+          >
             <Plus size={18} />
             <span>New Ticket</span>
           </button>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 p-1 bg-slate-100/50 dark:bg-slate-900/50 rounded-2xl w-fit border border-slate-200/50 dark:border-slate-800/50">
-        {(['all', 'pending', 'in-progress', 'completed'] as const).map((s) => (
-          <button
-            key={s}
-            onClick={() => setFilter(s)}
-            className={cn(
-              "px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
-              filter === s 
-                ? "bg-white dark:bg-slate-800 text-primary shadow-sm" 
-                : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
-            )}
-          >
-            {s}
-          </button>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <AnimatePresence mode="popLayout">
-          {filteredTickets.map((ticket) => (
-            <motion.div
-              layout
-              key={ticket.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="glass-card p-6 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-2xl relative group overflow-hidden"
-            >
-              <div className={cn(
-                "absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 opacity-[0.03] group-hover:opacity-[0.08] rounded-full blur-3xl transition-opacity duration-500",
-                ticket.priority === 'critical' ? 'bg-rose-500' : 'bg-primary'
-              )} />
-
-              <div className="flex items-start justify-between mb-6 relative z-10">
-                <div className="space-y-1">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{ticket.id}</span>
-                  <h3 className="font-black text-lg group-hover:text-primary transition-colors">{ticket.title}</h3>
-                </div>
-                <div className={cn(
-                  "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border shadow-sm",
-                  priorityColors[ticket.priority as keyof typeof priorityColors]
-                )}>
-                  {ticket.priority}
-                </div>
-              </div>
-
-              <div className="space-y-4 relative z-10">
-                <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400">
-                  <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                    <Building2 size={16} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-900 dark:text-slate-100">{ticket.property}</p>
-                    <p className="text-[10px] font-medium italic">Unit {ticket.unit}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-2xl border border-slate-100/50 dark:border-slate-800/50">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                      <User size={14} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-6">
+          <AnimatePresence mode="popLayout">
+            {filteredTickets.map((ticket) => (
+              <motion.div
+                layout
+                key={ticket.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="glass-card p-8 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-2xl flex flex-col md:flex-row gap-8 group hover:border-amber-500/30 transition-all"
+              >
+                <div className="flex-1 space-y-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{ticket.id}</span>
+                      <span className={cn(
+                        "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border",
+                        ticket.priority === 'high' ? "bg-rose-50 text-rose-600 border-rose-100" :
+                        ticket.priority === 'medium' ? "bg-amber-50 text-amber-600 border-amber-100" :
+                        "bg-blue-50 text-blue-600 border-blue-100"
+                      )}>
+                        {ticket.priority} priority
+                      </span>
                     </div>
-                    <span className="text-xs font-bold">{ticket.tenant}</span>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <Clock size={14} />
+                      <span className="text-[10px] font-bold">{ticket.date}</span>
+                    </div>
                   </div>
-                  <span className="text-[10px] font-bold text-slate-400 italic">{ticket.date}</span>
+                  <h3 className="text-xl font-black group-hover:text-amber-600 transition-colors">{ticket.issue}</h3>
+                  <div className="flex items-center gap-4 text-sm text-slate-500">
+                    <div className="flex items-center gap-2">
+                      <AlertCircle size={16} />
+                      <span className="font-bold">{ticket.property}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Hammer size={16} />
+                      <span className="font-bold">Tech: {ticket.technician}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+                
+                <div className="flex md:flex-col justify-between items-end border-t md:border-t-0 md:border-l border-slate-100 dark:border-slate-800 pt-6 md:pt-0 md:pl-8">
+                   <div className={cn(
+                     "px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2",
+                     ticket.status === 'completed' ? "bg-emerald-500/10 text-emerald-600" :
+                     ticket.status === 'in-progress' ? "bg-blue-500/10 text-blue-600" :
+                     "bg-amber-500/10 text-amber-600"
+                   )}>
+                      {ticket.status === 'completed' && <CheckCircle2 size={14} />}
+                      {ticket.status}
+                   </div>
+                   <button className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl hover:bg-amber-600 hover:text-white transition-all shadow-sm">
+                      <ArrowRight size={20} />
+                   </button>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
 
-              <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between relative z-10">
-                <div className="flex items-center gap-2">
-                  <div className={cn(
-                    "w-2 h-2 rounded-full",
-                    ticket.status === 'completed' ? 'bg-emerald-500' : ticket.status === 'in-progress' ? 'bg-blue-500' : 'bg-amber-500'
-                  )} />
-                  <span className="text-[10px] font-black uppercase tracking-widest opacity-70">{ticket.status}</span>
-                </div>
-                <button className="p-2 bg-primary/10 text-primary rounded-xl hover:bg-primary hover:text-white transition-all">
-                  <ArrowRight size={18} />
-                </button>
+        <div className="space-y-8">
+           <div className="glass-card p-10 rounded-[3rem] border border-white/20 dark:border-slate-800/50 shadow-2xl bg-linear-to-br from-amber-500 to-orange-600 text-white relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-8 opacity-20 rotate-12"><Wrench size={100} /></div>
+              <h3 className="text-2xl font-black tracking-tighter mb-4 italic">Operational Status</h3>
+              <p className="text-sm font-medium text-white/80 mb-8 leading-relaxed">System monitoring indicates optimal performance with average resolution time under 4 hours.</p>
+              <div className="space-y-4">
+                 {[
+                   { label: 'Active Tasks', value: '42' },
+                   { label: 'Idle Techs', value: '08' },
+                   { label: 'CSAT Score', value: '98%' },
+                 ].map((s, i) => (
+                   <div key={i} className="flex justify-between items-center p-4 bg-white/10 rounded-2xl border border-white/10">
+                      <span className="text-[10px] font-black uppercase tracking-widest">{s.label}</span>
+                      <span className="text-xl font-black">{s.value}</span>
+                   </div>
+                 ))}
               </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+           </div>
+
+           <div className="glass-card p-8 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-xl">
+              <h3 className="text-lg font-black mb-6 flex items-center gap-2 italic">
+                 <Filter size={18} />
+                 Resource Map
+              </h3>
+              <div className="space-y-4">
+                 {['Plumbing', 'Electrical', 'HVAC', 'General'].map((tech) => (
+                    <div key={tech} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl group cursor-pointer hover:bg-slate-100 transition-all">
+                       <span className="text-xs font-black">{tech}</span>
+                       <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-lg">Available</span>
+                    </div>
+                 ))}
+              </div>
+           </div>
+        </div>
       </div>
+
+      {/* New Ticket Modal */}
+      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="Provision Multi-Ticket">
+        <form onSubmit={handleCreateTicket} className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Affected Asset</label>
+            <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold appearance-none">
+                 <option>Villa Hodan - Unit 202</option>
+                 <option>Blue Sky Apt - Unit 105</option>
+                 <option>Commercial Hub - Ground Floor</option>
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Issue Description</label>
+            <textarea required placeholder="e.g. Broken faucet in the bathroom cabinet..." className="w-full h-32 px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold resize-none" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Priority Stream</label>
+              <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold appearance-none">
+                 <option key="low" value="low">Low Impact</option>
+                 <option key="medium" value="medium">Medium Urgency</option>
+                 <option key="high" value="high">High Velocity (Critical)</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Estimated Cost ($)</label>
+              <input type="number" placeholder="50" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold" />
+            </div>
+          </div>
+
+          <button type="submit" className="w-full py-4 bg-amber-600 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-amber-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
+            Dispatch Support
+          </button>
+        </form>
+      </Modal>
     </div>
   );
 };

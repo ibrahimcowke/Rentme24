@@ -1,197 +1,109 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
+  Building2, 
+  MapPin, 
   TrendingUp, 
-  Award, 
-  Briefcase, 
-  Phone, 
-  Mail,
-  Plus,
-  MoreVertical,
+  ShieldCheck, 
   Star,
+  ExternalLink,
+  Plus,
   Search,
   Filter,
-  ExternalLink
+  UserSquare2
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/utils/cn';
+import Modal from '@/components/Modal';
 
-const mockBrokers = [
-  { 
-    id: 1, 
-    name: "Abdiwahab Ahmed", 
-    deals: 24, 
-    earnings: 3250, 
-    rate: 5, 
-    status: "active", 
-    score: 4.8,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Abdi" 
-  },
-  { 
-    id: 2, 
-    name: "Sahra Hassan", 
-    deals: 18, 
-    earnings: 2100, 
-    rate: 4, 
-    status: "active", 
-    score: 4.5,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sahra" 
-  },
-  { 
-    id: 3, 
-    name: "Mohamed Ali", 
-    deals: 12, 
-    earnings: 1450, 
-    rate: 4.5, 
-    status: "active", 
-    score: 4.2,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Mohamed" 
-  },
+const brokers = [
+  { id: 1, name: 'Zakaria Ali', units: 48, rating: 4.9, score: 98, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Zak' },
+  { id: 2, name: 'Muna Yusuf', units: 36, rating: 4.8, score: 94, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Muna' },
+  { id: 3, name: 'Abdi Hassan', units: 24, rating: 4.7, score: 89, avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Abdi' },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 }
-};
-
 const Brokers: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  const filteredBrokers = brokers.filter(b => b.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
+  const handleAddBroker = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsAddModalOpen(false);
+    alert('Broker successfully onboarded to the performance network.');
+  };
+
   return (
     <motion.div 
-      initial="hidden"
-      animate="show"
-      variants={containerVariants}
-      className="space-y-8 animate-in slide-in-from-right-4 duration-500 pb-12"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="space-y-10 pb-12"
     >
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 animate-in slide-in-from-bottom-4 duration-700">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-blue-500/10 text-blue-600 rounded-xl ring-4 ring-blue-500/5">
-              <Briefcase size={20} />
+            <div className="p-2 bg-indigo-500/10 text-indigo-600 rounded-xl ring-4 ring-indigo-500/5">
+              <UserSquare2 size={20} />
             </div>
-            <h1 className="text-3xl font-black tracking-tight">Broker <span className="text-blue-600 italic">Network</span></h1>
+            <h1 className="text-3xl font-black tracking-tight tracking-tighter">Broker <span className="text-indigo-600 italic">Network</span></h1>
           </div>
-          <p className="text-slate-500 font-medium">Coordinate with external agents and track performance-based payouts.</p>
+          <p className="text-slate-500 font-medium">Coordinate with elite real estate professionals and monitor yields.</p>
         </div>
         
         <div className="flex items-center gap-4">
            <div className="relative group hidden sm:block">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search brokers..." 
-              className="pl-10 pr-4 py-2.5 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all shadow-sm"
-            />
-          </div>
-          <button className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-2xl hover:bg-blue-700 transition-all font-bold shadow-lg shadow-blue-500/20 whitespace-nowrap">
-            <Plus size={18} />
-            <span>Add Broker</span>
-          </button>
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" size={18} />
+              <input 
+                type="text" 
+                placeholder="Search network..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4 py-2.5 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all shadow-sm"
+              />
+           </div>
+           <button 
+             onClick={() => setIsAddModalOpen(true)}
+             className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-700 transition-all font-bold shadow-lg shadow-indigo-500/20"
+           >
+             <Plus size={18} />
+             <span>Add Broker</span>
+           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {/* Performance Overview */}
-        <motion.div variants={itemVariants} className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-linear-to-br from-blue-600 to-indigo-500 p-8 rounded-4xl text-white shadow-2xl relative overflow-hidden group">
-             <div className="absolute top-0 right-0 w-48 h-48 -mr-12 -mt-12 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-500" />
-             <div className="flex items-center justify-between mb-10 relative z-10">
-                <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-md">
-                   <Briefcase size={32} />
-                </div>
-                <span className="text-[10px] font-black bg-white/20 px-4 py-1.5 rounded-xl uppercase tracking-widest backdrop-blur-md">Tier 1 Partners</span>
-             </div>
-             <p className="text-white/70 text-xs font-black uppercase tracking-[0.2em] relative z-10">Total Broker Commissions</p>
-             <h3 className="text-5xl font-black mt-2 tracking-tighter relative z-10">$12,450.00</h3>
-             <div className="mt-8 flex items-center gap-3 text-[10px] font-black text-white/90 bg-white/10 w-fit px-4 py-2 rounded-xl backdrop-blur-md border border-white/10 relative z-10">
-                <TrendingUp size={14} />
-                <span>+15% GROWTH FROM Q1</span>
-             </div>
-          </div>
-
-          <div className="glass-card p-8 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-2xl flex flex-col justify-between">
-             <div className="flex items-center justify-between">
-                <h3 className="text-xl font-black italic">Leaderboard</h3>
-                <div className="p-2 bg-amber-500/10 text-amber-500 rounded-xl">
-                   <Award size={20} />
-                </div>
-             </div>
-             <div className="space-y-4 mt-8">
-                {mockBrokers.map((b, i) => (
-                  <div key={b.id} className="flex items-center gap-4 group cursor-pointer">
-                    <span className="text-[10px] font-black text-slate-400 w-4 tracking-tighter">0{i+1}</span>
-                    <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 p-0.5 shadow-sm group-hover:scale-110 transition-transform">
-                       <img src={b.avatar} alt={b.name} className="w-full h-full rounded-[14px] bg-white dark:bg-slate-900 border-2 border-white dark:border-slate-800" />
-                    </div>
-                    <div className="flex-1">
-                       <p className="text-sm font-black group-hover:text-primary transition-colors">{b.name}</p>
-                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{b.deals} Deals</p>
-                    </div>
-                    <span className="text-sm font-black text-primary">${b.earnings}</span>
-                  </div>
-                ))}
-             </div>
-             <button className="mt-10 w-full py-3 bg-slate-100/50 dark:bg-slate-800/50 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all">Download Audit</button>
-          </div>
-        </motion.div>
-
-        {/* Smart Score Widget */}
-        <motion.div variants={itemVariants} className="glass-card p-8 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-2xl bg-linear-to-b from-blue-50/50 to-transparent dark:from-blue-900/10 dark:to-transparent relative overflow-hidden">
-           <div className="absolute -top-4 -left-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl" />
-           
-           <div className="flex items-center justify-between mb-10">
-              <h3 className="text-xl font-black italic">Network Health</h3>
-              <button className="p-2 bg-white dark:bg-slate-900 rounded-xl shadow-sm"><Filter size={18} /></button>
-           </div>
-           
-           <div className="flex flex-col items-center justify-center py-6">
-              <div className="relative w-40 h-40 flex items-center justify-center">
-                 <svg className="w-full h-full transform -rotate-90">
-                    <circle cx="80" cy="80" r="74" stroke="currentColor" strokeWidth="10" fill="transparent" className="text-slate-100 dark:text-slate-800" />
-                    <circle 
-                      cx="80" 
-                      cy="80" 
-                      r="74" 
-                      stroke="currentColor" 
-                      strokeWidth="10" 
-                      fill="transparent" 
-                      strokeDasharray="464.96" 
-                      strokeDashoffset="37.2" 
-                      className="text-primary drop-shadow-[0_0_8px_rgba(37,99,235,0.4)]"
-                      strokeLinecap="round"
-                    />
-                 </svg>
-                 <div className="absolute flex flex-col items-center">
-                    <span className="text-4xl font-black tracking-tighter">9.2</span>
-                    <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest mt-1">Global Score</span>
-                 </div>
-              </div>
-              <p className="mt-8 text-xs font-black uppercase tracking-widest text-slate-500 bg-white/50 dark:bg-slate-800/50 px-4 py-2 rounded-full border border-slate-200/50 dark:border-slate-700/50">Efficiency: Optimal</p>
-           </div>
-        </motion.div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          { label: 'Active Brokers', value: '42', icon: ShieldCheck, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+          { label: 'Network Yield', value: '$84,200', icon: TrendingUp, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+          { label: 'Expansion Rate', value: '+14%', icon: Building2, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+        ].map((card, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className="glass-card p-6 rounded-3xl border border-white/20 dark:border-slate-800/50 shadow-xl flex items-center gap-5"
+          >
+            <div className={cn("p-4 rounded-2xl shadow-lg", card.bg, card.color)}>
+              <card.icon size={24} />
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{card.label}</p>
+              <h3 className="text-2xl font-black">{card.value}</h3>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
-      {/* Broker List */}
-      <motion.div variants={itemVariants} className="space-y-6">
-        <div className="flex items-center justify-between px-2">
-           <h3 className="text-xl font-black tracking-tight italic">Active Network</h3>
-           <div className="flex items-center gap-2">
-              <button className="p-2 text-slate-400 hover:text-primary transition-colors"><MoreVertical size={20} /></button>
-           </div>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {mockBrokers.map((broker) => (
-            <motion.div 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <AnimatePresence mode="popLayout">
+          {filteredBrokers.map((broker) => (
+            <motion.div
               layout
-              key={broker.id} 
+              key={broker.id}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
               className="glass-card rounded-4xl p-8 border border-white/20 dark:border-slate-800/50 flex flex-col sm:flex-row gap-8 hover:shadow-2xl transition-all group relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -211,41 +123,66 @@ const Brokers: React.FC = () => {
               </div>
 
               <div className="flex-1 space-y-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-black text-2xl tracking-tight group-hover:text-primary transition-all">{broker.name}</h4>
-                    <div className="flex items-center gap-2 mt-1">
-                       <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                       <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Rate: {broker.rate}% commission</p>
-                    </div>
+                <div>
+                  <h3 className="text-2xl font-black mb-1">{broker.name}</h3>
+                  <div className="flex items-center gap-2 text-slate-500 font-bold text-xs uppercase tracking-tight">
+                    <MapPin size={14} />
+                    Mogadishu, Somalia
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                   <div className="p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-3xl border border-slate-100/50 dark:border-slate-800/50 group-hover:border-primary/20 transition-colors">
-                      <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Impact</p>
-                      <p className="text-xl font-black">{broker.deals} <span className="text-xs uppercase text-slate-400">Deals</span></p>
-                   </div>
-                   <div className="p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-3xl border border-slate-100/50 dark:border-slate-800/50 group-hover:border-primary/20 transition-colors">
-                      <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Generated</p>
-                      <p className="text-xl font-black text-primary">${broker.earnings.toLocaleString()}</p>
-                   </div>
+                  <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Managed Units</p>
+                    <p className="text-xl font-black">{broker.units}</p>
+                  </div>
+                  <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800/50">
+                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Avg Rating</p>
+                    <p className="text-xl font-black text-amber-500">{broker.rating}</p>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-3 pt-2">
-                   <button className="flex-1 h-12 flex items-center justify-center gap-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-primary hover:text-white hover:border-primary transition-all group/btn shadow-sm">
-                      <Phone size={18} />
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden sm:block">Call Agent</span>
-                   </button>
-                   <button className="w-12 h-12 flex items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all shadow-sm">
-                      <Mail size={18} />
-                   </button>
-                </div>
+                <button className="w-full py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">View Performance Profile</button>
               </div>
             </motion.div>
           ))}
-        </div>
-      </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Add Broker Modal */}
+      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="Network Expansion">
+        <form onSubmit={handleAddBroker} className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Professional Name</label>
+            <input type="text" required placeholder="e.g. Liban Ghedi" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 transition-all font-bold" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Specialization</label>
+              <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 transition-all font-bold appearance-none">
+                 <option>Residential Luxury</option>
+                 <option>Commercial Portfolio</option>
+                 <option>Industrial Leasing</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">License No.</label>
+              <input type="text" required placeholder="LIC-9022" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 transition-all font-bold" />
+            </div>
+          </div>
+
+          <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-[1.5rem] border border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center text-center">
+             <Filter className="text-slate-300 mb-2" size={32} />
+             <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Commission Settings Strategy</p>
+             <p className="text-xs text-slate-500 font-bold mt-1">Standard 5% Platform Flat Fee</p>
+          </div>
+
+          <button type="submit" className="w-full py-4 bg-indigo-600 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-xl shadow-indigo-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4">
+            Initiate Partnership
+          </button>
+        </form>
+      </Modal>
     </motion.div>
   );
 };

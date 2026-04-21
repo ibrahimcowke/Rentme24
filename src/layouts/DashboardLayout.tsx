@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -14,11 +14,14 @@ import {
   BarChart3,
   Globe,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  Sun,
+  Moon,
+  Search
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '../utils/cn';
+import { cn } from '@/utils/cn';
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'common.dashboard', path: '/' },
@@ -33,8 +36,24 @@ const sidebarItems = [
 
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    }
+    return 'light';
+  });
   const { t, i18n } = useTranslation();
   const location = useLocation();
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'so' : 'en';
@@ -42,7 +61,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFDFF] dark:bg-[#060810] text-slate-900 dark:text-slate-100 flex overflow-hidden">
+    <div className="min-h-screen bg-[#FDFDFF] dark:bg-[#060810] text-slate-900 dark:text-slate-100 flex overflow-hidden font-inter transition-colors duration-500">
       <AnimatePresence>
         {!isSidebarOpen && (
           <motion.div 
@@ -64,7 +83,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
         <div className="flex flex-col h-full">
           <div className="h-24 flex items-center px-6 border-b border-slate-100 dark:border-slate-800/50">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 rotate-3 group-hover:rotate-0 transition-transform">
+              <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 rotate-3 transition-transform cursor-pointer">
                 <Building2 className="text-white" size={24} />
               </div>
               {isSidebarOpen && (
@@ -146,11 +165,11 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
            <div className="flex items-center gap-4">
               <button 
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="p-2.5 bg-slate-100/50 dark:bg-slate-800/50 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all md:hidden"
+                className="p-2.5 bg-slate-100/50 dark:bg-slate-800/50 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
               >
                 {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
-              <nav className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
+              <nav className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest hidden sm:flex">
                  <span>Vault</span>
                  <ChevronRight size={12} />
                  <span className="text-slate-900 dark:text-slate-100">
@@ -159,19 +178,26 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               </nav>
            </div>
 
-           <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full border border-emerald-500/20">
+           <div className="flex items-center gap-4">
+              <button 
+                onClick={toggleTheme}
+                className="p-2.5 bg-slate-100/50 dark:bg-slate-800/50 rounded-xl hover:bg-primary/10 hover:text-primary transition-all text-slate-500"
+              >
+                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+              </button>
+
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full border border-emerald-500/20 hidden sm:flex">
                  <Sparkles size={14} className="animate-pulse" />
                  <span className="text-[10px] font-black uppercase tracking-wider">Sync Active</span>
               </div>
               
-              <div className="flex items-center gap-3 pl-6 border-l border-slate-200 dark:border-slate-800/50">
+              <div className="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800/50">
                  <div className="text-right hidden sm:block">
                     <p className="text-sm font-black tracking-tight">Abdi Ahmed</p>
                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Master Associate</p>
                  </div>
-                 <div className="w-10 h-10 rounded-2xl bg-linear-to-tr from-primary to-indigo-500 p-0.5 shadow-lg shadow-primary/20 rotate-3">
-                    <div className="w-full h-full rounded-[14px] bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden">
+                 <div className="w-10 h-10 rounded-[14px] bg-linear-to-tr from-primary to-indigo-500 p-0.5 shadow-lg shadow-primary/20">
+                    <div className="w-full h-full rounded-[12px] bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden">
                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Abdi" alt="User" />
                     </div>
                  </div>

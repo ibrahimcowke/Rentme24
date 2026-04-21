@@ -100,7 +100,7 @@ const Brokers: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {/* Performance Overview */}
         <motion.div variants={itemVariants} className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="bg-linear-to-br from-blue-600 to-indigo-500 p-8 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden group">
+          <div className="bg-linear-to-br from-blue-600 to-indigo-500 p-8 rounded-4xl text-white shadow-2xl relative overflow-hidden group">
              <div className="absolute top-0 right-0 w-48 h-48 -mr-12 -mt-12 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-500" />
              <div className="flex items-center justify-between mb-10 relative z-10">
                 <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-md">
@@ -116,7 +116,7 @@ const Brokers: React.FC = () => {
              </div>
           </div>
 
-          <div className="glass-card p-8 rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 shadow-2xl flex flex-col justify-between">
+          <div className="glass-card p-8 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-2xl flex flex-col justify-between">
              <div className="flex items-center justify-between">
                 <h3 className="text-xl font-black italic">Leaderboard</h3>
                 <div className="p-2 bg-amber-500/10 text-amber-500 rounded-xl">
@@ -143,7 +143,7 @@ const Brokers: React.FC = () => {
         </motion.div>
 
         {/* Smart Score Widget */}
-        <motion.div variants={itemVariants} className="glass-card p-8 rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 shadow-2xl bg-linear-to-b from-blue-50/50 to-transparent dark:from-blue-900/10 dark:to-transparent relative overflow-hidden">
+        <motion.div variants={itemVariants} className="glass-card p-8 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-2xl bg-linear-to-b from-blue-50/50 to-transparent dark:from-blue-900/10 dark:to-transparent relative overflow-hidden">
            <div className="absolute -top-4 -left-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl" />
            
            <div className="flex items-center justify-between mb-10">
@@ -192,14 +192,14 @@ const Brokers: React.FC = () => {
             <motion.div 
               layout
               key={broker.id} 
-              className="glass-card rounded-[2.5rem] p-8 border border-white/20 dark:border-slate-800/50 flex flex-col sm:flex-row gap-8 hover:shadow-2xl transition-all group relative overflow-hidden"
+              className="glass-card rounded-4xl p-8 border border-white/20 dark:border-slate-800/50 flex flex-col sm:flex-row gap-8 hover:shadow-2xl transition-all group relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                  <button className="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl hover:text-primary"><ExternalLink size={16} /></button>
               </div>
 
               <div className="flex flex-col items-center">
-                <div className="w-24 h-24 rounded-[2rem] bg-linear-to-tr from-primary to-indigo-500 p-1 mb-4 shadow-xl shadow-primary/20 group-hover:rotate-3 transition-transform duration-500">
+                <div className="w-24 h-24 rounded-4xl bg-linear-to-tr from-primary to-indigo-500 p-1 mb-4 shadow-xl shadow-primary/20 group-hover:rotate-3 transition-transform duration-500">
                    <div className="w-full h-full rounded-[1.75rem] bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden border-4 border-white dark:border-slate-900">
                       <img src={broker.avatar} alt={broker.name} className="w-full h-full object-cover" />
                    </div>

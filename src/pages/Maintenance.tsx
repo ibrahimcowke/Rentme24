@@ -93,7 +93,7 @@ const Maintenance: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="glass-card p-6 rounded-[2rem] border border-white/20 dark:border-slate-800/50 shadow-2xl relative group overflow-hidden"
+              className="glass-card p-6 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-2xl relative group overflow-hidden"
             >
               <div className={cn(
                 "absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 opacity-[0.03] group-hover:opacity-[0.08] rounded-full blur-3xl transition-opacity duration-500",

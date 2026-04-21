@@ -78,7 +78,7 @@ const Reports: React.FC = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.1 }}
-            className="glass-card p-8 rounded-[2rem] border border-white/20 dark:border-slate-800/50 shadow-xl group"
+            className="glass-card p-8 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-xl group"
           >
              <div className="flex justify-between items-start mb-4">
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{card.title}</span>
@@ -94,7 +94,7 @@ const Reports: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="glass-card p-8 rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 shadow-2xl relative overflow-hidden">
+        <div className="glass-card p-8 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 flex gap-2">
              <button className="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl hover:text-indigo-600 transition-all"><Filter size={18} /></button>
           </div>
@@ -123,7 +123,7 @@ const Reports: React.FC = () => {
           </div>
         </div>
 
-        <div className="glass-card p-8 rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 shadow-2xl">
+        <div className="glass-card p-8 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-2xl">
            <h3 className="text-xl font-black mb-10 italic">Quarterly Expenses</h3>
            <div className="h-[350px] w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -142,7 +142,7 @@ const Reports: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-         <div className="glass-card p-8 rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 shadow-2xl flex flex-col items-center">
+         <div className="glass-card p-8 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-2xl flex flex-col items-center">
             <h3 className="text-xl font-black w-full text-left italic mb-6">Asset Allocation</h3>
             <div className="h-[250px] w-full">
                <ResponsiveContainer width="100%" height="100%">
@@ -173,7 +173,7 @@ const Reports: React.FC = () => {
             </div>
          </div>
 
-         <div className="lg:col-span-2 glass-card p-8 rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 shadow-2xl">
+         <div className="lg:col-span-2 glass-card p-8 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-2xl">
             <div className="flex items-center justify-between mb-8">
                <h3 className="text-xl font-black italic">Recent Exports</h3>
                <button className="text-[10px] font-black uppercase text-indigo-600 tracking-widest hover:underline">Clear History</button>

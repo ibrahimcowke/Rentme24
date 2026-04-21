@@ -139,14 +139,14 @@ const Tenants: React.FC = () => {
               key={tenant.id}
               variants={itemVariants}
               whileHover={{ y: -5 }}
-              className="glass-card p-8 rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 shadow-2xl group relative overflow-hidden"
+              className="glass-card p-8 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-2xl group relative overflow-hidden"
             >
               {/* Background Accent */}
               <div className="absolute top-0 right-0 w-32 h-32 -mr-10 -mt-10 bg-emerald-500 opacity-[0.03] group-hover:opacity-[0.08] rounded-full blur-3xl transition-opacity duration-500" />
 
               <div className="flex items-start justify-between mb-8 relative z-10">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-[1.25rem] bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-lg shadow-emerald-500/20 group-hover:rotate-3 transition-transform duration-500">
+                  <div className="w-16 h-16 rounded-[1.25rem] bg-linear-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-lg shadow-emerald-500/20 group-hover:rotate-3 transition-transform duration-500">
                     <div className="w-full h-full rounded-[1.125rem] bg-white dark:bg-slate-900 border-2 border-white dark:border-slate-900 overflow-hidden">
                        <img src={tenant.avatar} alt={tenant.name} className="w-full h-full object-cover" />
                     </div>

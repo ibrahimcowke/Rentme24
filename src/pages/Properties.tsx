@@ -97,7 +97,7 @@ const Properties: React.FC = () => {
                 key={prop.id}
                 variants={itemVariants}
                 whileHover={{ y: -5 }}
-                className="group glass-card rounded-[2.5rem] overflow-hidden border border-white/20 dark:border-slate-800/50 shadow-2xl relative"
+                className="group glass-card rounded-4xl overflow-hidden border border-white/20 dark:border-slate-800/50 shadow-2xl relative"
               >
                 <div className="relative h-64 overflow-hidden">
                   <img src={prop.image} alt={prop.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -166,7 +166,7 @@ const Properties: React.FC = () => {
           </AnimatePresence>
         </div>
       ) : (
-        <motion.div variants={itemVariants} className="glass-card rounded-[2.5rem] overflow-hidden border border-white/20 dark:border-slate-800/50 shadow-2xl">
+        <motion.div variants={itemVariants} className="glass-card rounded-4xl overflow-hidden border border-white/20 dark:border-slate-800/50 shadow-2xl">
           <table className="w-full text-left">
             <thead>
               <tr className="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800/50">

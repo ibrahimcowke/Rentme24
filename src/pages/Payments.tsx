@@ -112,7 +112,7 @@ const Payments: React.FC = () => {
              </div>
           </div>
 
-          <div className="glass-card rounded-[2.5rem] overflow-hidden border border-white/20 dark:border-slate-800/50 shadow-2xl">
+          <div className="glass-card rounded-4xl overflow-hidden border border-white/20 dark:border-slate-800/50 shadow-2xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
@@ -173,7 +173,7 @@ const Payments: React.FC = () => {
         {/* Payment Configuration */}
         <motion.div variants={itemVariants} className="space-y-6">
            <h3 className="text-xl font-black italic px-2">Configuration</h3>
-           <div className="glass-card p-8 rounded-[2.5rem] border border-white/20 dark:border-slate-800/50 shadow-2xl space-y-8">
+           <div className="glass-card p-8 rounded-4xl border border-white/20 dark:border-slate-800/50 shadow-2xl space-y-8">
               <div className="space-y-4">
                  <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700">
                     <div className="flex items-center gap-3">
@@ -193,7 +193,7 @@ const Payments: React.FC = () => {
                  </div>
               </div>
 
-              <div className="p-6 bg-linear-to-br from-indigo-600 to-primary rounded-[2rem] text-white shadow-xl relative overflow-hidden group">
+              <div className="p-6 bg-linear-to-br from-indigo-600 to-primary rounded-4xl text-white shadow-xl relative overflow-hidden group">
                  <div className="absolute top-0 right-0 p-4 opacity-50"><TrendingUp size={48} /></div>
                  <h4 className="text-lg font-black italic mb-2 relative z-10">Revenue Yield</h4>
                  <p className="text-4xl font-black tracking-tighter mb-4 relative z-10">94.2%</p>

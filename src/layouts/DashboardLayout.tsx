@@ -16,8 +16,7 @@ import {
   ChevronRight,
   Sparkles,
   Sun,
-  Moon,
-  Search
+  Moon
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -169,7 +168,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
               >
                 {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
-              <nav className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest hidden sm:flex">
+              <nav className="hidden sm:flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest">
                  <span>Vault</span>
                  <ChevronRight size={12} />
                  <span className="text-slate-900 dark:text-slate-100">
@@ -186,7 +185,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                 {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
               </button>
 
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full border border-emerald-500/20 hidden sm:flex">
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full border border-emerald-500/20">
                  <Sparkles size={14} className="animate-pulse" />
                  <span className="text-[10px] font-black uppercase tracking-wider">Sync Active</span>
               </div>

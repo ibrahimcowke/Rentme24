@@ -16,7 +16,8 @@ import {
   ChevronRight,
   Sparkles,
   Sun,
-  Moon
+  Moon,
+  Database
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -31,6 +32,7 @@ const sidebarItems = [
   { icon: Wrench, label: 'common.maintenance', path: '/maintenance' },
   { icon: UserSquare2, label: 'common.brokers', path: '/brokers' },
   { icon: BarChart3, label: 'common.reports', path: '/reports' },
+  { icon: Database, label: 'common.sql_editor', path: '/sql' },
   { icon: Settings, label: 'common.settings', path: '/settings' },
 ];
 

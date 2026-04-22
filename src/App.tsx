@@ -9,7 +9,6 @@ import Brokers from './pages/Brokers';
 import Settings from './pages/Settings';
 import Maintenance from './pages/Maintenance';
 import Reports from './pages/Reports';
-import SqlEditor from './pages/SqlEditor';
 import './translations/i18n';
 
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -31,7 +30,6 @@ const App: React.FC = () => {
             <Route path="/maintenance" element={<Maintenance />} />
             <Route path="/brokers" element={<Brokers />} />
             <Route path="/reports" element={<Reports />} />
-            <Route path="/sql" element={<SqlEditor />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>
         </DashboardLayout>

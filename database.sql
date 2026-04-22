@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS properties (
     rent NUMERIC(12, 2) NOT NULL DEFAULT 0,
     status unit_status NOT NULL DEFAULT 'available',
     image TEXT,
-    beds INTEGER DEFAULT 0,
+    rooms INTEGER DEFAULT 0,
     kitchens INTEGER DEFAULT 0,
     toilets INTEGER DEFAULT 0,
     created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -104,7 +104,7 @@ END $$;
 
 -- 5. INITIAL SEED DATA (Mogadishu Context)
 
-INSERT INTO properties (name, code, type, district, rent, status, image, beds, kitchens, toilets)
+INSERT INTO properties (name, code, type, district, rent, status, image, rooms, kitchens, toilets)
 VALUES 
 ('Villa Hodan', 'HOD-001', 'house', 'Hodan', 500, 'occupied', 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914', 4, 1, 3),
 ('Blue Sky Apartment', 'WAD-042', 'apartment', 'Wadajir', 350, 'available', 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00', 2, 1, 1),

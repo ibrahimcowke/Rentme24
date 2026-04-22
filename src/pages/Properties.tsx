@@ -15,7 +15,7 @@ import {
   ShieldCheck,
   Activity,
   Users,
-  Bed,
+  DoorOpen,
   Utensils,
   Bath
 } from 'lucide-react';
@@ -57,7 +57,7 @@ const Properties: React.FC = () => {
     district: MOGADISHU_DISTRICTS[0],
     type: 'house' as 'house' | 'apartment' | 'office',
     rent: 0,
-    beds: 0,
+    rooms: 0,
     kitchens: 0,
     toilets: 0
   });
@@ -80,7 +80,7 @@ const Properties: React.FC = () => {
       district: MOGADISHU_DISTRICTS[0], 
       type: 'house', 
       rent: 0,
-      beds: 0,
+      rooms: 0,
       kitchens: 0,
       toilets: 0
     });
@@ -217,8 +217,8 @@ const Properties: React.FC = () => {
                   {(prop.type === 'house' || prop.type === 'apartment') && (
                     <div className="flex gap-4 p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-3xl border border-slate-100/50 dark:border-slate-800/50">
                        <div className="flex items-center gap-2">
-                          <Bed size={14} className="text-primary" />
-                          <span className="text-[10px] font-black dark:text-slate-200">{prop.beds || 0} Beds</span>
+                          <DoorOpen size={14} className="text-primary" />
+                          <span className="text-[10px] font-black dark:text-slate-200">{prop.rooms || 0} Rooms</span>
                        </div>
                        <div className="flex items-center gap-2">
                           <Utensils size={14} className="text-primary" />
@@ -405,11 +405,11 @@ const Properties: React.FC = () => {
           {(formData.type === 'house' || formData.type === 'apartment') && (
             <div className="grid grid-cols-3 gap-4 p-5 bg-slate-50 dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700">
                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Beds</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Rooms</label>
                   <input 
                     type="number" 
-                    value={formData.beds}
-                    onChange={(e) => setFormData({ ...formData, beds: Number(e.target.value) })}
+                    value={formData.rooms}
+                    onChange={(e) => setFormData({ ...formData, rooms: Number(e.target.value) })}
                     className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700 rounded-xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold dark:text-slate-100" 
                   />
                </div>
@@ -486,9 +486,9 @@ const Properties: React.FC = () => {
                  <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-6 px-1">Interior Specifications</h4>
                  <div className="grid grid-cols-3 gap-8">
                     <div className="flex flex-col items-center gap-2">
-                       <Bed size={24} className="text-primary" />
-                       <span className="text-xl font-black dark:text-white uppercase tracking-tighter">{selectedProperty.beds || 0}</span>
-                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Beds</span>
+                       <DoorOpen size={24} className="text-primary" />
+                       <span className="text-xl font-black dark:text-white uppercase tracking-tighter">{selectedProperty.rooms || 0}</span>
+                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Rooms</span>
                     </div>
                     <div className="flex flex-col items-center gap-2 border-x border-slate-200 dark:border-slate-700/50">
                        <Utensils size={24} className="text-primary" />

@@ -10,7 +10,9 @@ import {
   CreditCard,
   History,
   TrendingUp,
-  Clock
+  Clock,
+  Zap,
+  ArrowRight
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
@@ -81,47 +83,47 @@ const Payments: React.FC = () => {
       variants={containerVariants}
       className="space-y-8 animate-in fade-in duration-700 pb-12"
     >
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 px-1">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-emerald-500/10 text-emerald-600 rounded-xl ring-4 ring-emerald-500/5">
-              <DollarSign size={20} />
+            <div className="p-2.5 bg-emerald-500/10 text-emerald-600 rounded-xl ring-4 ring-emerald-500/5">
+              <DollarSign size={22} />
             </div>
-            <h1 className="text-3xl font-black tracking-tighter dark:text-white">Payment <span className="text-emerald-600 italic">Cloud</span></h1>
+            <h1 className="text-4xl font-black tracking-tighter dark:text-white uppercase italic leading-tight">Financial <span className="text-emerald-600 NOT-italic">Cloud</span></h1>
           </div>
-          <p className="text-slate-500 dark:text-slate-400 font-medium tracking-tight">Digital ledger and real-time transaction monitoring.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium tracking-tight">Digital ledger and real-time transaction monitoring.</p>
         </div>
         
         <div className="flex items-center gap-4">
           <div className="relative group hidden sm:block">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" size={18} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" size={18} />
             <input 
               type="text" 
               placeholder="Filter payments..." 
-              className="pl-10 pr-4 py-2.5 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all shadow-sm dark:text-slate-100 placeholder-slate-400"
+              className="pl-12 pr-6 py-3.5 w-72 glass border border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all shadow-xl dark:text-white text-sm font-bold"
             />
           </div>
           <button 
             onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 text-white rounded-2xl hover:bg-emerald-700 transition-all font-bold shadow-lg shadow-emerald-500/20 whitespace-nowrap glow-primary"
+            className="flex items-center gap-2 px-8 py-3.5 bg-emerald-600 text-white rounded-2xl hover:scale-105 transition-all font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 whitespace-nowrap glow-primary active:scale-95"
           >
-            <Plus size={18} />
+            <Plus size={18} strokeWidth={3} />
             <span>Post Payment</span>
           </button>
         </div>
       </div>
 
-      {/* Transaction Overview */}
+      {/* Transaction Overview with Glass Style */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
           { label: 'Today Revenue', value: '$1,250', trend: '+8%', icon: TrendingUp, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
           { label: 'Weekly Gross', value: '$8,400', trend: '+12%', icon: CreditCard, color: 'text-blue-500', bg: 'bg-blue-500/10' },
           { label: 'Pending Payouts', value: '$2,300', trend: '-2%', icon: Clock, color: 'text-amber-500', bg: 'bg-amber-500/10' },
-          { label: 'Cash Collection', value: '42.5%', trend: '+5%', icon: History, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+          { label: 'Cash Flow', value: '42.5%', trend: '+5%', icon: History, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
         ].map((stat, i) => (
-          <motion.div key={i} variants={itemVariants} className="glass-card p-6 rounded-3xl group cursor-pointer shadow-xl flex items-center gap-4 transition-transform hover:scale-[1.02]">
-             <div className={cn("p-4 rounded-2xl transition-transform group-hover:scale-110 shadow-sm", stat.bg, stat.color)}>
-                <stat.icon size={20} />
+          <motion.div key={i} variants={itemVariants} className="glass-card p-6 rounded-3xl group cursor-pointer shadow-xl flex items-center gap-4 transition-all hover:scale-[1.02]">
+             <div className={cn("p-4 rounded-2xl shadow-lg transition-transform group-hover:scale-110", stat.bg, stat.color)}>
+                <stat.icon size={22} />
              </div>
              <div>
                 <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{stat.label}</p>
@@ -133,68 +135,69 @@ const Payments: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <motion.div variants={itemVariants} className="lg:col-span-2 space-y-6">
-          <div className="flex items-center justify-between px-2">
-             <h3 className="text-xl font-black italic dark:text-white">Recent Transactions</h3>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 px-2">
+             <h3 className="text-2xl font-black italic dark:text-white uppercase tracking-tighter">Recent Transactions</h3>
              <div className="flex items-center gap-4">
-                <div className="flex bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200 dark:border-slate-800/50 shadow-inner">
-                   <button onClick={() => setFilter('all')} className={cn("px-4 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all", filter === 'all' ? "bg-white dark:bg-slate-700 text-emerald-600 shadow-sm" : "text-slate-400")}>All</button>
-                   <button onClick={() => setFilter('completed')} className={cn("px-4 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all", filter === 'completed' ? "bg-white dark:bg-slate-700 text-emerald-600 shadow-sm" : "text-slate-400")}>Paid</button>
-                   <button onClick={() => setFilter('pending')} className={cn("px-4 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all", filter === 'pending' ? "bg-white dark:bg-slate-700 text-emerald-600 shadow-sm" : "text-slate-400")}>Due</button>
+                <div className="flex glass p-1.5 rounded-2xl border border-white/10 shadow-inner">
+                   <button onClick={() => setFilter('all')} className={cn("px-5 py-2 rounded-xl text-[10px] font-black uppercase transition-all", filter === 'all' ? "bg-emerald-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-200")}>All</button>
+                   <button onClick={() => setFilter('completed')} className={cn("px-5 py-2 rounded-xl text-[10px] font-black uppercase transition-all", filter === 'completed' ? "bg-emerald-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-200")}>Paid</button>
+                   <button onClick={() => setFilter('pending')} className={cn("px-5 py-2 rounded-xl text-[10px] font-black uppercase transition-all", filter === 'pending' ? "bg-emerald-600 text-white shadow-lg" : "text-slate-400 hover:text-slate-200")}>Due</button>
                 </div>
-                <button className="p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl hover:text-emerald-600 transition-all shadow-sm">
-                   <FileDown size={18} className="dark:text-slate-400 hover:text-inherit" />
+                <button className="p-3 glass rounded-2xl text-slate-400 hover:text-emerald-500 transition-all">
+                   <FileDown size={20} />
                 </button>
              </div>
           </div>
 
-          <div className="glass-card rounded-4xl overflow-hidden shadow-2xl overflow-x-auto">
+          <div className="glass-card rounded-[2.5rem] overflow-hidden shadow-2xl overflow-x-auto border border-white/10">
             <table className="w-full text-left">
               <thead>
-                <tr className="bg-slate-50/50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800/50">
-                  <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Transaction</th>
-                  <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Member</th>
-                  <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Method</th>
-                  <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Volume</th>
-                  <th className="px-8 py-5 text-right text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Status</th>
+                <tr className="bg-white/5 border-b border-white/10">
+                  <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Transaction</th>
+                  <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Resident Member</th>
+                  <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Transfer Channel</th>
+                  <th className="px-8 py-6 text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Settlement Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
+              <tbody className="divide-y divide-white/10">
                 {filteredTransactions.map((tx) => (
-                  <tr key={tx.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-all group">
-                    <td className="px-8 py-5">
+                  <tr key={tx.id} className="hover:bg-white/5 transition-all group">
+                    <td className="px-8 py-6">
                       <div className="flex items-center gap-4">
                         <div className={cn(
-                          "p-3 rounded-xl shadow-sm border",
-                          tx.status === 'completed' ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 border-emerald-100 dark:border-emerald-500/20" : "bg-amber-50 dark:bg-amber-500/10 text-amber-600 border-amber-100 dark:border-amber-500/20"
+                          "p-3 glass rounded-xl shadow-sm border transition-transform group-hover:scale-110",
+                          tx.status === 'completed' ? "text-emerald-500 border-emerald-500/20" : "text-amber-500 border-amber-500/20"
                         )}>
-                          <ArrowUpRight size={18} />
+                          <ArrowUpRight size={20} />
                         </div>
                         <div>
-                          <p className="font-black tracking-tight uppercase text-xs dark:text-slate-100">{tx.id}</p>
-                          <p className="text-[10px] font-bold text-slate-400">{tx.date}</p>
+                          <p className="font-black tracking-tight uppercase text-xs dark:text-white">{tx.id}</p>
+                          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">{tx.date}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-8 py-5">
-                      <p className="font-black text-sm dark:text-slate-200">{tx.tenantName}</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{tx.propertyName}</p>
+                    <td className="px-8 py-6">
+                      <p className="font-black text-sm dark:text-slate-100 uppercase tracking-tight">{tx.tenantName}</p>
+                      <p className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mt-1">{tx.propertyName}</p>
                     </td>
-                    <td className="px-8 py-5">
-                      <div className="flex items-center gap-2">
-                         {tx.method.includes('Mobile') || tx.method.includes('e-Dahab') ? <Smartphone size={14} className="text-emerald-500" /> : <Building2 size={14} className="text-slate-400" />}
+                    <td className="px-8 py-6">
+                      <div className="flex items-center gap-3">
+                         <div className="p-2 glass rounded-lg text-slate-400">
+                           {tx.method.includes('Mobile') ? <Smartphone size={16} /> : <Building2 size={16} />}
+                         </div>
                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">{tx.method}</span>
                       </div>
                     </td>
-                    <td className="px-8 py-5">
-                      <span className="text-lg font-black text-emerald-600 dark:text-emerald-400 tracking-tighter">${tx.amount}</span>
-                    </td>
-                    <td className="px-8 py-5 text-right">
-                      <span className={cn(
-                        "px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border shadow-sm",
-                        tx.status === 'completed' ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" : "bg-amber-500/10 text-amber-600 border-amber-500/20"
-                      )}>
-                        {tx.status}
-                      </span>
+                    <td className="px-8 py-6">
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="text-xl font-black text-emerald-600 tracking-tighter">${tx.amount}</span>
+                        <span className={cn(
+                          "px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border shadow-lg",
+                          tx.status === 'completed' ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                        )}>
+                          {tx.status}
+                        </span>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -203,42 +206,47 @@ const Payments: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Payment Configuration */}
+        {/* Financial Configuration */}
         <motion.div variants={itemVariants} className="space-y-6">
-           <h3 className="text-xl font-black italic px-2 dark:text-white">Configuration</h3>
-           <div className="glass-card p-8 rounded-4xl shadow-2xl space-y-8">
+           <h3 className="text-2xl font-black italic px-2 dark:text-white uppercase tracking-tighter">Settlement Hub</h3>
+           <div className="glass-card p-8 rounded-[2.5rem] shadow-2xl border border-white/10 space-y-8">
               <div className="space-y-4">
-                 <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800/50 transition-colors">
-                    <div className="flex items-center gap-3">
-                       <Smartphone className="text-emerald-500" size={20} />
-                       <span className="text-sm font-black dark:text-slate-200">Mobile Payouts</span>
-                    </div>
-                    <div className="w-10 h-5 bg-emerald-500 rounded-full p-1 flex justify-end transition-all cursor-pointer shadow-sm">
-                       <div className="w-3 h-3 bg-white rounded-full shadow-md" />
-                    </div>
-                 </div>
-                 <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800/50 transition-colors">
-                    <div className="flex items-center gap-3">
-                       <History className="text-slate-400" size={20} />
-                       <span className="text-sm font-black text-slate-400">Escrow Sync</span>
-                    </div>
-                    <div className="w-10 h-5 bg-slate-200 dark:bg-slate-700/50 rounded-full p-1 flex justify-start transition-all cursor-pointer" />
-                 </div>
+                 {[
+                   { label: 'Mobile Payouts', icon: Smartphone, active: true, color: 'text-emerald-500' },
+                   { label: 'Cloud Sync', icon: History, active: false, color: 'text-slate-500' },
+                   { label: 'Auto Receipts', icon: Zap, active: true, color: 'text-primary' },
+                 ].map((toggle, i) => (
+                   <div key={i} className="flex items-center justify-between p-5 glass rounded-2xl border border-white/5 hover:bg-white/5 transition-all cursor-pointer">
+                      <div className="flex items-center gap-4">
+                         <toggle.icon className={toggle.color} size={20} />
+                         <span className="text-xs font-black dark:text-slate-100 uppercase tracking-widest">{toggle.label}</span>
+                      </div>
+                      <div className={cn(
+                        "w-12 h-6 rounded-full p-1 flex transition-all shadow-inner",
+                        toggle.active ? "bg-emerald-500 justify-end" : "bg-white/10 justify-start"
+                      )}>
+                         <div className="w-4 h-4 bg-white rounded-full shadow-xl" />
+                      </div>
+                   </div>
+                 ))}
               </div>
 
-              <div className="p-6 bg-linear-to-br from-emerald-600 to-teal-500 rounded-4xl text-white shadow-xl relative overflow-hidden group glow-primary">
-                 <div className="absolute top-0 right-0 p-4 opacity-30 group-hover:scale-110 transition-transform"><TrendingUp size={48} /></div>
-                 <h4 className="text-lg font-black italic mb-2 relative z-10 text-emerald-50">Revenue Yield</h4>
-                 <p className="text-4xl font-black tracking-tighter mb-4 relative z-10">{stats.occupancyRate}%</p>
-                 <button className="w-full py-3 bg-white/20 backdrop-blur-md rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/30 transition-all border border-white/10">Full Settlement</button>
+              <div className="p-8 bg-linear-to-br from-emerald-600 to-teal-500 rounded-4xl text-white shadow-2xl relative overflow-hidden group glow-primary">
+                 <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:scale-125 transition-transform duration-700"><TrendingUp size={80} /></div>
+                 <h4 className="text-xs font-black uppercase tracking-[0.2em] mb-2 text-emerald-100">Market Occupancy</h4>
+                 <p className="text-5xl font-black tracking-tighter mb-8 relative z-10">{stats.occupancyRate}%</p>
+                 <button className="w-full py-4 glass text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/20 transition-all border border-white/20 flex items-center justify-center gap-3">
+                    Full Ledger View
+                    <ArrowRight size={16} />
+                 </button>
               </div>
 
               <div className="pt-4 space-y-4">
-                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Integrations</p>
-                 <div className="flex gap-3">
-                    {[0, 1, 2, 3].map((i) => (
-                       <div key={i} className="flex-1 py-4 bg-slate-100 dark:bg-slate-800/50 rounded-xl flex items-center justify-center opacity-50 hover:opacity-100 transition-all border border-transparent hover:border-emerald-500/30 cursor-pointer">
-                          <CreditCard size={18} className="dark:text-slate-400" />
+                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 px-1">Network Protocols</p>
+                 <div className="flex gap-4">
+                    {[0, 1, 2].map((i) => (
+                       <div key={i} className="flex-1 py-5 glass rounded-2xl flex items-center justify-center hover:bg-white/10 transition-all border border-white/5 cursor-pointer">
+                          <CreditCard size={20} className="text-slate-500" />
                        </div>
                     ))}
                  </div>
@@ -248,7 +256,7 @@ const Payments: React.FC = () => {
       </div>
 
       {/* Post Payment Modal */}
-      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="Post New Transaction">
+      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="Initialize Financial Settlement">
         <form onSubmit={handlePostPayment} className="space-y-6">
           <div className="space-y-2">
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Select Resident</label>
@@ -256,57 +264,41 @@ const Payments: React.FC = () => {
               required 
               value={formData.tenantId}
               onChange={(e) => setFormData({ ...formData, tenantId: e.target.value })}
-              className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold appearance-none dark:text-slate-100"
+              className="w-full px-5 py-4 glass border border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-white appearance-none"
             >
               {tenants.map(t => (
-                 <option key={t.id} value={t.id} className="bg-white dark:bg-slate-900">{t.name} ({t.propertyName})</option>
+                 <option key={t.id} value={t.id} className="bg-slate-900">{t.name} • {t.propertyName}</option>
               ))}
             </select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Payment Method</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Transfer Channel</label>
               <select 
                 required 
                 value={formData.method}
                 onChange={(e) => setFormData({ ...formData, method: e.target.value })}
-                className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold appearance-none dark:text-slate-100"
+                className="w-full px-5 py-4 glass border border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-white appearance-none"
               >
-                 <option value="Mobile Money (EVC Plus)" className="bg-white dark:bg-slate-900">Mobile Money (EVC Plus)</option>
-                 <option value="e-Dahab" className="bg-white dark:bg-slate-900">e-Dahab</option>
-                 <option value="Bank Transfer" className="bg-white dark:bg-slate-900">Bank Transfer</option>
-                 <option value="Cash" className="bg-white dark:bg-slate-900">Cash</option>
+                 <option value="Mobile Money (EVC Plus)" className="bg-slate-900">Mobile Money (EVC Plus)</option>
+                 <option value="e-Dahab" className="bg-slate-900">e-Dahab</option>
+                 <option value="Bank Transfer" className="bg-slate-900">Bank Transfer</option>
+                 <option value="Cash" className="bg-slate-900">Cash</option>
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Amount ($)</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Volume ($)</label>
               <input 
-                type="number" 
-                required 
-                placeholder="500" 
-                value={formData.amount || ''}
-                onChange={(e) => setFormData({ ...formData, amount: Number(e.target.value) })}
-                className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" 
+                type="number" required placeholder="500" 
+                value={formData.amount || ''} onChange={(e) => setFormData({ ...formData, amount: Number(e.target.value) })}
+                className="w-full px-5 py-4 glass border border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-white" 
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Status</label>
-            <select 
-              required 
-              value={formData.status}
-              onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-              className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold appearance-none dark:text-slate-100"
-            >
-               <option value="completed" className="bg-white dark:bg-slate-900">Completed (Paid)</option>
-               <option value="pending" className="bg-white dark:bg-slate-900">Pending (Due)</option>
-            </select>
-          </div>
-
-          <button type="submit" className="w-full py-4 bg-emerald-600 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4 glow-primary">
-            Post To Ledger
+          <button type="submit" className="w-full py-4.5 bg-emerald-600 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:scale-[1.02] transition-all glow-primary">
+            Post Settlement To Ledger
           </button>
         </form>
       </Modal>

@@ -3,7 +3,6 @@ import {
   Plus, 
   Search, 
   MapPin, 
-  MoreVertical,
   LayoutGrid,
   List as ListIcon,
   Home,

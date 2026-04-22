@@ -18,7 +18,6 @@ import {
 import { motion } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from '@/utils/cn';
-import { useTheme } from '@/contexts/ThemeContext';
 import { useData } from '@/contexts/DataContext';
 
 const containerVariants = {
@@ -37,7 +36,6 @@ const itemVariants = {
 };
 
 const Dashboard: React.FC = () => {
-  const { isDark } = useTheme();
   const { stats, transactions } = useData();
 
   const [metric, setMetric] = useState<'revenue' | 'yield'>('revenue');

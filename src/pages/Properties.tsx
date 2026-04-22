@@ -17,7 +17,8 @@ import {
   Users,
   DoorOpen,
   Utensils,
-  Bath
+  Bath,
+  Edit3
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
@@ -41,12 +42,13 @@ const itemVariants = {
 };
 
 const Properties: React.FC = () => {
-  const { properties, addProperty, deleteProperty } = useData();
+  const { properties, addProperty, updateProperty, deleteProperty } = useData();
   const { addToast } = useToast();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('All Districts');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingPropertyId, setEditingPropertyId] = useState<string | null>(null);
   const [selectedProperty, setSelectedProperty] = useState<any>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
@@ -71,9 +73,15 @@ const Properties: React.FC = () => {
 
   const handleAddAsset = (e: React.FormEvent) => {
     e.preventDefault();
-    addProperty(formData);
-    addToast(`${formData.name} successfully provisioned.`, 'success');
+    if (editingPropertyId) {
+       updateProperty(editingPropertyId, formData);
+       addToast(`${formData.name} updated successfully.`, 'success');
+    } else {
+       addProperty(formData);
+       addToast(`${formData.name} successfully provisioned.`, 'success');
+    }
     setIsAddModalOpen(false);
+    setEditingPropertyId(null);
     setFormData({ 
       name: '', 
       code: '', 
@@ -86,6 +94,21 @@ const Properties: React.FC = () => {
     });
   };
 
+  const handleOpenEdit = (prop: any) => {
+     setEditingPropertyId(prop.id);
+     setFormData({
+        name: prop.name,
+        code: prop.code,
+        district: prop.district,
+        type: prop.type,
+        rent: prop.rent,
+        rooms: prop.rooms || 0,
+        kitchens: prop.kitchens || 0,
+        toilets: prop.toilets || 0
+     });
+     setIsAddModalOpen(true);
+  };
+
   return (
     <motion.div 
       initial="hidden"
@@ -93,49 +116,56 @@ const Properties: React.FC = () => {
       variants={containerVariants}
       className="space-y-8 animate-in fade-in duration-700 pb-12"
     >
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 px-1">
         <div>
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-primary/10 text-primary rounded-xl ring-4 ring-primary/5">
               <Home size={20} />
             </div>
-            <h1 className="text-3xl font-black tracking-tighter dark:text-white">Property <span className="text-primary italic">Vault</span></h1>
+            <h1 className="text-3xl font-black tracking-tighter dark:text-white uppercase italic">Registry <span className="text-primary NOT-italic">Vault</span></h1>
           </div>
-          <p className="text-slate-500 dark:text-slate-400 font-medium tracking-tight">Managing assets across Mogadishu's {MOGADISHU_DISTRICTS.length} Districts.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium tracking-tight">Managing assets across {MOGADISHU_DISTRICTS.length} Specialized Districts.</p>
         </div>
         
-        <div className="flex items-center gap-4">
-          <div className="relative group hidden sm:block">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+          <div className="relative group min-w-[280px]">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
             <input 
               type="text" 
-              placeholder="Filter assets..." 
+              placeholder="Search assets..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2.5 w-64 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-primary/10 outline-none transition-all shadow-sm dark:text-slate-100"
+              className="pl-12 pr-4 py-3 w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl focus:ring-4 focus:ring-primary/10 outline-none transition-all shadow-md dark:text-slate-100 text-sm font-bold"
             />
           </div>
-          <div className="flex bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800/50 shadow-inner">
+          
+          <div className="flex items-center gap-4">
+            <div className="flex bg-slate-100 dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-inner">
+               <button 
+                 onClick={() => setViewMode('grid')}
+                 className={cn("p-2 rounded-xl transition-all", viewMode === 'grid' ? "bg-white dark:bg-slate-800 text-primary shadow-md" : "text-slate-400")}
+               >
+                 <LayoutGrid size={18} />
+               </button>
+               <button 
+                 onClick={() => setViewMode('list')}
+                 className={cn("p-2 rounded-xl transition-all", viewMode === 'list' ? "bg-white dark:bg-slate-800 text-primary shadow-md" : "text-slate-400")}
+               >
+                 <ListIcon size={18} />
+               </button>
+            </div>
             <button 
-              onClick={() => setViewMode('grid')}
-              className={cn("p-2 rounded-xl transition-all", viewMode === 'grid' ? "bg-white dark:bg-slate-700 text-primary shadow-md" : "text-slate-400")}
+              onClick={() => {
+                setEditingPropertyId(null);
+                setFormData({ name: '', code: '', district: MOGADISHU_DISTRICTS[0], type: 'house', rent: 0, rooms: 0, kitchens: 0, toilets: 0 });
+                setIsAddModalOpen(true);
+              }}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-3 bg-primary text-white rounded-2xl hover:bg-blue-700 transition-all font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 glow-primary whitespace-nowrap active:scale-95"
             >
-              <LayoutGrid size={18} />
-            </button>
-            <button 
-              onClick={() => setViewMode('list')}
-              className={cn("p-2 rounded-xl transition-all", viewMode === 'list' ? "bg-white dark:bg-slate-700 text-primary shadow-md" : "text-slate-400")}
-            >
-              <ListIcon size={18} />
+              <Plus size={18} strokeWidth={3} />
+              <span>Provision Asset</span>
             </button>
           </div>
-          <button 
-            onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-2xl hover:bg-blue-700 transition-all font-bold shadow-lg shadow-blue-500/20 whitespace-nowrap glow-primary"
-          >
-            <Plus size={18} />
-            <span>Add Asset</span>
-          </button>
         </div>
       </div>
 
@@ -247,15 +277,23 @@ const Properties: React.FC = () => {
 
                   <div className="pt-6 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between">
                      <div className="flex items-center gap-4">
-                        <button 
-                          onClick={() => {
-                            deleteProperty(prop.id);
-                            addToast("Asset removed from registry.", "info");
-                          }}
-                          className="p-2.5 bg-rose-50 dark:bg-rose-900/10 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-sm"
-                        >
-                           <Trash2 size={16} />
-                        </button>
+                         <button 
+                           onClick={() => handleOpenEdit(prop)}
+                           className="p-2.5 bg-blue-50 dark:bg-blue-900/10 text-primary rounded-xl hover:bg-primary hover:text-white transition-all shadow-sm"
+                         >
+                            <Edit3 size={16} />
+                         </button>
+                         <button 
+                           onClick={() => {
+                             if(confirm("Are you sure you want to remove this asset?")) {
+                                deleteProperty(prop.id);
+                                addToast("Asset removed from registry.", "info");
+                             }
+                           }}
+                           className="p-2.5 bg-rose-50 dark:bg-rose-900/10 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                         >
+                            <Trash2 size={16} />
+                         </button>
                         <button 
                           onClick={() => {
                              setSelectedProperty(prop);
@@ -317,17 +355,36 @@ const Properties: React.FC = () => {
                       {prop.status}
                     </span>
                   </td>
-                  <td className="px-8 py-5 text-right">
-                    <button 
-                      onClick={() => {
-                        setSelectedProperty(prop);
-                        setIsDetailModalOpen(true);
-                      }}
-                      className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm"
-                    >
-                      <MoreVertical size={18} className="dark:text-slate-400 group-hover:text-inherit" />
-                    </button>
-                  </td>
+                   <td className="px-8 py-5 text-right">
+                    <div className="flex items-center justify-end gap-3">
+                      <button 
+                        onClick={() => handleOpenEdit(prop)}
+                        className="p-2.5 bg-blue-50 dark:bg-blue-900/10 text-primary rounded-xl hover:bg-primary hover:text-white transition-all shadow-sm"
+                      >
+                         <Edit3 size={16} />
+                      </button>
+                      <button 
+                        onClick={() => {
+                          if(confirm("Are you sure you want to remove this asset?")) {
+                             deleteProperty(prop.id);
+                             addToast("Asset removed from registry.", "info");
+                          }
+                        }}
+                        className="p-2.5 bg-rose-50 dark:bg-rose-900/10 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                      >
+                         <Trash2 size={16} />
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setSelectedProperty(prop);
+                          setIsDetailModalOpen(true);
+                        }}
+                        className="p-2.5 bg-slate-50 dark:bg-slate-800 text-slate-400 rounded-xl hover:bg-primary hover:text-white transition-all border border-slate-200 dark:border-slate-700 shadow-sm"
+                      >
+                        <ArrowRight size={16} />
+                      </button>
+                    </div>
+                   </td>
                 </tr>
               ))}
             </tbody>
@@ -335,8 +392,15 @@ const Properties: React.FC = () => {
         </motion.div>
       )}
 
-      {/* Add Asset Modal */}
-      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="New Asset Provisioning">
+      {/* Add/Edit Asset Modal */}
+      <Modal 
+        isOpen={isAddModalOpen} 
+        onClose={() => {
+           setIsAddModalOpen(false);
+           setEditingPropertyId(null);
+        }} 
+        title={editingPropertyId ? "Update Asset Intelligence" : "New Asset Provisioning"}
+      >
         <form onSubmit={handleAddAsset} className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -434,7 +498,7 @@ const Properties: React.FC = () => {
             </div>
           )}
           <button type="submit" className="w-full py-4 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4 glow-primary">
-            Initialize Asset
+            {editingPropertyId ? "Commit Asset Updates" : "Initialize Asset"}
           </button>
         </form>
       </Modal>

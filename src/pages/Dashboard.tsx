@@ -57,11 +57,11 @@ const Dashboard: React.FC = () => {
       className="space-y-10 animate-in fade-in duration-700 pb-12"
     >
       {/* Prime Header Section */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-8">
         <div>
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-3 mb-2 flex-wrap">
             <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-full border border-primary/20">Operational Hub</span>
-            <span className="text-slate-300 dark:text-slate-700">|</span>
+            <span className="text-slate-300 dark:text-slate-700 hidden xs:block">|</span>
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Real-time Intelligence</span>
           </div>
           <h1 className="text-4xl lg:text-5xl font-black tracking-tighter text-slate-900 dark:text-white">
@@ -69,18 +69,18 @@ const Dashboard: React.FC = () => {
           </h1>
         </div>
         
-        <div className="flex items-center gap-4">
-           <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={20} />
+        <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+           <div className="relative group flex-1 sm:flex-none">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
               <input 
                 type="text" 
-                placeholder="Intelligence Search..." 
-                className="pl-12 pr-6 py-4 w-64 lg:w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl focus:ring-4 focus:ring-primary/10 outline-none transition-all shadow-lg shadow-slate-200/50 dark:shadow-none font-medium"
+                placeholder="Search..." 
+                className="pl-12 pr-6 py-3.5 w-full sm:w-64 lg:w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl focus:ring-4 focus:ring-primary/10 outline-none transition-all shadow-lg shadow-slate-200/50 dark:shadow-none font-medium text-sm"
               />
            </div>
-           <button className="relative p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group shadow-md dark:shadow-none">
-              <Bell size={24} className="group-hover:rotate-12 transition-transform dark:text-slate-100" />
-              <span className="absolute top-3 right-3 w-3 h-3 bg-rose-500 rounded-full border-4 border-white dark:border-slate-900" />
+           <button className="relative p-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group shadow-md dark:shadow-none shrink-0">
+              <Bell size={20} className="group-hover:rotate-12 transition-transform dark:text-slate-100" />
+              <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-rose-500 rounded-full border-4 border-white dark:border-slate-900" />
            </button>
         </div>
       </div>

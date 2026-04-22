@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -33,8 +33,25 @@ const sidebarItems = [
 
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const { t, i18n } = useTranslation();
   const location = useLocation();
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile) setIsSidebarOpen(false);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Close sidebar on navigation flow for mobile
+  useEffect(() => {
+    if (isMobile) setIsSidebarOpen(false);
+  }, [location.pathname, isMobile]);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'so' : 'en';
@@ -43,14 +60,15 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
 
   return (
     <div className="min-h-screen bg-background text-slate-900 dark:text-slate-100 flex overflow-hidden font-inter transition-colors duration-500">
+      {/* Mobile Overlay */}
       <AnimatePresence>
-        {!isSidebarOpen && (
+        {isMobile && isSidebarOpen && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setIsSidebarOpen(true)}
-            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 md:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40"
           />
         )}
       </AnimatePresence>
@@ -58,7 +76,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
       <aside 
         className={cn(
           "fixed md:static inset-y-0 left-0 z-50 transform transition-all duration-500 ease-in-out bg-card dark:bg-[#0B1120] border-r border-slate-200 dark:border-slate-800/50",
-          isSidebarOpen ? "w-72" : "w-20 -translate-x-full md:translate-x-0"
+          isSidebarOpen ? "w-72 translate-x-0" : "w-20 -translate-x-full md:translate-x-0"
         )}
       >
         <div className="flex flex-col h-full">
@@ -73,29 +91,35 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                    animate={{ opacity: 1, x: 0 }}
                    className="flex flex-col"
                 >
-                   <span className="text-xl font-black tracking-tight text-gradient">GuriFlow</span>
-                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 -mt-1">Pro Manager</span>
+                  <span className="text-lg font-black tracking-tighter uppercase italic leading-none">Guri<span className="text-primary italic">Flow</span></span>
+                  <span className="text-[8px] font-black tracking-[0.2em] text-slate-400 uppercase">Pro Network</span>
                 </motion.div>
               )}
             </div>
+            {isMobile && isSidebarOpen && (
+              <button onClick={() => setIsSidebarOpen(false)} className="ml-auto p-2 text-slate-400">
+                <X size={20} />
+              </button>
+            )}
           </div>
 
-          <nav className="flex-1 px-4 py-8 space-y-2 overflow-y-auto custom-scrollbar">
+          <nav className="flex-1 p-4 space-y-2 overflow-y-auto scrollbar-hide">
             {sidebarItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center h-12 rounded-2xl transition-all duration-300 relative group",
+                  "group relative h-14 flex items-center rounded-2xl transition-all duration-300",
                   location.pathname === item.path 
-                    ? "bg-slate-100 dark:bg-slate-800/50 text-primary shadow-sm" 
-                    : "text-slate-500 hover:text-slate-900 dark:hover:text-slate-200"
+                    ? "bg-primary text-white shadow-xl shadow-primary/20 glow-primary" 
+                    : "text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
                 )}
               >
                 {location.pathname === item.path && (
                   <motion.div 
-                    layoutId="activeTab"
-                    className="absolute left-0 w-1.5 h-6 bg-primary rounded-r-full"
+                    layoutId="sidebar-active"
+                    className="absolute inset-0 bg-primary rounded-2xl -z-10"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
                 <div className={cn(
@@ -143,56 +167,33 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
         {/* Cinematic Backdrop Bloom */}
         <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-primary/5 dark:bg-primary/10 blur-[120px] pointer-events-none -z-10" />
 
-        <header className="h-20 flex items-center justify-between px-8 sticky top-0 bg-background/70 dark:bg-[#060810]/70 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
+        <header className="h-20 flex items-center justify-between px-4 md:px-8 sticky top-0 bg-background/70 dark:bg-[#060810]/70 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
            <div className="flex items-center gap-4">
               <button 
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                 className="p-2.5 bg-slate-100/50 dark:bg-slate-800/50 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
               >
-                {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+                {isSidebarOpen ? <Menu size={20} /> : <Menu size={20} />}
               </button>
-              <nav className="hidden sm:flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest">
-                 <span>Vault</span>
-                 <ChevronRight size={12} />
-                 <span className="text-slate-900 dark:text-slate-100">
-                    {location.pathname === '/' ? 'Intelligence' : location.pathname.substring(1)}
-                 </span>
-              </nav>
+              <div className="md:hidden">
+                 <span className="text-sm font-black tracking-tighter uppercase italic leading-none">Guri<span className="text-primary italic">Flow</span></span>
+              </div>
            </div>
 
            <div className="flex items-center gap-4">
-
               <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full border border-emerald-500/20">
                  <Sparkles size={14} className="animate-pulse" />
-                 <span className="text-[10px] font-black uppercase tracking-wider">Sync Active</span>
+                 <span className="text-[10px] font-black uppercase tracking-widest">Network Active</span>
               </div>
-              
-              <div className="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800/50">
-                 <div className="text-right hidden sm:block">
-                    <p className="text-sm font-black tracking-tight">Abdi Ahmed</p>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Master Associate</p>
-                 </div>
-                 <div className="w-10 h-10 rounded-[14px] bg-linear-to-tr from-primary to-indigo-500 p-0.5 shadow-lg shadow-primary/20">
-                    <div className="w-full h-full rounded-[12px] bg-white dark:bg-slate-900 flex items-center justify-center overflow-hidden border border-white/10">
-                       <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Abdi" alt="User" />
-                    </div>
-                 </div>
+
+              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border-2 border-white dark:border-slate-800 shadow-md overflow-hidden">
+                 <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="User" />
               </div>
            </div>
         </header>
 
-        <div className="p-8">
-           <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              >
-                {children}
-              </motion.div>
-           </AnimatePresence>
+        <div className="p-4 md:p-8">
+          {children}
         </div>
       </main>
     </div>

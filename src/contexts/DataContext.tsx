@@ -9,6 +9,9 @@ export interface Property {
   rent: number;
   status: 'occupied' | 'available';
   image: string;
+  beds?: number;
+  kitchens?: number;
+  toilets?: number;
 }
 
 export interface Tenant {
@@ -63,10 +66,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [properties, setProperties] = useState<Property[]>(() => {
     const saved = localStorage.getItem('rentme-properties');
     return saved ? JSON.parse(saved) : [
-      { id: '1', name: "Villa Hodan", code: "HOD-001", type: "house", district: "Hodan", rent: 500, status: "occupied", image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=600" },
-      { id: '2', name: "Blue Sky Apartment", code: "WAD-042", type: "apartment", district: "Wadajir", rent: 350, status: "available", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600" },
+      { id: '1', name: "Villa Hodan", code: "HOD-001", type: "house", district: "Hodan", rent: 500, status: "occupied", image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=600", beds: 4, kitchens: 1, toilets: 3 },
+      { id: '2', name: "Blue Sky Apartment", code: "WAD-042", type: "apartment", district: "Wadajir", rent: 350, status: "available", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600", beds: 2, kitchens: 1, toilets: 1 },
       { id: '3', name: "Commercial Hub", code: "XW-105", type: "office", district: "Hamar-Weyne", rent: 1200, status: "occupied", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600" },
-      { id: '4', name: "Sunset Residence", code: "DAR-009", type: "house", district: "Darussalam", rent: 600, status: "available", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=600" },
+      { id: '4', name: "Sunset Residence", code: "DAR-009", type: "house", district: "Darussalam", rent: 600, status: "available", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=600", beds: 3, kitchens: 1, toilets: 2 },
     ];
   });
 

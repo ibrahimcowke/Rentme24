@@ -12,6 +12,12 @@ import {
   ArrowRight,
   TrendingUp,
   Trash2,
+  ShieldCheck,
+  Activity,
+  Users,
+  Bed,
+  Utensils,
+  Bath
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
@@ -41,6 +47,8 @@ const Properties: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('All Districts');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -48,7 +56,10 @@ const Properties: React.FC = () => {
     code: '',
     district: MOGADISHU_DISTRICTS[0],
     type: 'house' as 'house' | 'apartment' | 'office',
-    rent: 0
+    rent: 0,
+    beds: 0,
+    kitchens: 0,
+    toilets: 0
   });
 
   const filteredProperties = properties.filter(prop => {
@@ -63,7 +74,16 @@ const Properties: React.FC = () => {
     addProperty(formData);
     addToast(`${formData.name} successfully provisioned.`, 'success');
     setIsAddModalOpen(false);
-    setFormData({ name: '', code: '', district: MOGADISHU_DISTRICTS[0], type: 'house', rent: 0 });
+    setFormData({ 
+      name: '', 
+      code: '', 
+      district: MOGADISHU_DISTRICTS[0], 
+      type: 'house', 
+      rent: 0,
+      beds: 0,
+      kitchens: 0,
+      toilets: 0
+    });
   };
 
   return (
@@ -193,6 +213,24 @@ const Properties: React.FC = () => {
                     <span className="text-sm font-bold">{prop.district}, Mogadishu</span>
                   </div>
 
+                  {/* Residential Features */}
+                  {(prop.type === 'house' || prop.type === 'apartment') && (
+                    <div className="flex gap-4 p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-3xl border border-slate-100/50 dark:border-slate-800/50">
+                       <div className="flex items-center gap-2">
+                          <Bed size={14} className="text-primary" />
+                          <span className="text-[10px] font-black dark:text-slate-200">{prop.beds || 0} Beds</span>
+                       </div>
+                       <div className="flex items-center gap-2">
+                          <Utensils size={14} className="text-primary" />
+                          <span className="text-[10px] font-black dark:text-slate-200">{prop.kitchens || 0} Kitchen</span>
+                       </div>
+                       <div className="flex items-center gap-2">
+                          <Bath size={14} className="text-primary" />
+                          <span className="text-[10px] font-black dark:text-slate-200">{prop.toilets || 0} Toilet</span>
+                       </div>
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-2 gap-4">
                      <div className="p-4 bg-slate-50/50 dark:bg-slate-800/30 rounded-3xl border border-slate-100/50 dark:border-slate-800/50">
                         <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Monthly Yield</p>
@@ -218,7 +256,13 @@ const Properties: React.FC = () => {
                         >
                            <Trash2 size={16} />
                         </button>
-                        <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:translate-x-1 transition-all">
+                        <button 
+                          onClick={() => {
+                             setSelectedProperty(prop);
+                             setIsDetailModalOpen(true);
+                          }}
+                          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:translate-x-1 transition-all"
+                        >
                            Deep Review <ArrowRight size={14} />
                         </button>
                      </div>
@@ -274,7 +318,13 @@ const Properties: React.FC = () => {
                     </span>
                   </td>
                   <td className="px-8 py-5 text-right">
-                    <button className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm">
+                    <button 
+                      onClick={() => {
+                        setSelectedProperty(prop);
+                        setIsDetailModalOpen(true);
+                      }}
+                      className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm"
+                    >
                       <MoreVertical size={18} className="dark:text-slate-400 group-hover:text-inherit" />
                     </button>
                   </td>
@@ -352,10 +402,140 @@ const Properties: React.FC = () => {
             </div>
           </div>
 
+          {(formData.type === 'house' || formData.type === 'apartment') && (
+            <div className="grid grid-cols-3 gap-4 p-5 bg-slate-50 dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700">
+               <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Beds</label>
+                  <input 
+                    type="number" 
+                    value={formData.beds}
+                    onChange={(e) => setFormData({ ...formData, beds: Number(e.target.value) })}
+                    className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700 rounded-xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold dark:text-slate-100" 
+                  />
+               </div>
+               <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Kitchen</label>
+                  <input 
+                    type="number" 
+                    value={formData.kitchens}
+                    onChange={(e) => setFormData({ ...formData, kitchens: Number(e.target.value) })}
+                    className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700 rounded-xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold dark:text-slate-100" 
+                  />
+               </div>
+               <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Toilet</label>
+                  <input 
+                    type="number" 
+                    value={formData.toilets}
+                    onChange={(e) => setFormData({ ...formData, toilets: Number(e.target.value) })}
+                    className="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700 rounded-xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold dark:text-slate-100" 
+                  />
+               </div>
+            </div>
+          )}
           <button type="submit" className="w-full py-4 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4 glow-primary">
             Initialize Asset
           </button>
         </form>
+      </Modal>
+
+      {/* Asset Deep Review Modal */}
+      <Modal isOpen={isDetailModalOpen} onClose={() => setIsDetailModalOpen(false)} title="Asset Deep Review">
+        {selectedProperty && (
+          <div className="space-y-8 pb-4">
+            <div className="flex flex-col sm:flex-row gap-6">
+              <div className="w-full sm:w-48 h-32 rounded-3xl overflow-hidden shadow-xl ring-4 ring-slate-100 dark:ring-slate-800">
+                <img src={selectedProperty.image} alt={selectedProperty.name} className="w-full h-full object-cover" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                   <h3 className="text-3xl font-black tracking-tighter dark:text-white uppercase">{selectedProperty.name}</h3>
+                   <span className={cn(
+                      "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border shadow-xs",
+                      selectedProperty.status === 'occupied' ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 border-emerald-100 dark:border-emerald-500/20" : "bg-blue-50 dark:bg-blue-500/10 text-blue-600 border-blue-100 dark:border-blue-500/20"
+                   )}>
+                      {selectedProperty.status}
+                   </span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+                   <MapPin size={14} className="text-primary" />
+                   {selectedProperty.district}, Mogadishu • Code: {selectedProperty.code}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+               {[
+                 { label: 'Annual Yield', value: `$${(selectedProperty.rent * 12).toLocaleString()}`, icon: TrendingUp, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+                 { label: 'Risk Profile', value: 'Low', icon: ShieldCheck, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+                 { label: 'Health Score', value: '98%', icon: Activity, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+               ].map((stat, i) => (
+                 <div key={i} className="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-800/50">
+                    <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center mb-4 shadow-sm", stat.bg, stat.color)}>
+                       <stat.icon size={20} />
+                    </div>
+                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">{stat.label}</p>
+                    <p className="text-xl font-black dark:text-white uppercase tracking-tighter">{stat.value}</p>
+                 </div>
+               ))}
+            </div>
+
+            {/* Residential Specifications */}
+            {(selectedProperty.type === 'house' || selectedProperty.type === 'apartment') && (
+              <div className="p-8 bg-slate-50 dark:bg-slate-800/80 rounded-[2.5rem] border border-slate-100 dark:border-slate-800/50 shadow-inner">
+                 <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-6 px-1">Interior Specifications</h4>
+                 <div className="grid grid-cols-3 gap-8">
+                    <div className="flex flex-col items-center gap-2">
+                       <Bed size={24} className="text-primary" />
+                       <span className="text-xl font-black dark:text-white uppercase tracking-tighter">{selectedProperty.beds || 0}</span>
+                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Beds</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-2 border-x border-slate-200 dark:border-slate-700/50">
+                       <Utensils size={24} className="text-primary" />
+                       <span className="text-xl font-black dark:text-white uppercase tracking-tighter">{selectedProperty.kitchens || 0}</span>
+                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Kitchen</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                       <Bath size={24} className="text-primary" />
+                       <span className="text-xl font-black dark:text-white uppercase tracking-tighter">{selectedProperty.toilets || 0}</span>
+                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Toilet</span>
+                    </div>
+                 </div>
+              </div>
+            )}
+
+            <div className="glass-card p-6 rounded-4xl border border-dashed border-slate-200 dark:border-slate-800 flex items-center justify-between group cursor-pointer hover:border-primary/30 transition-all">
+               <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                     <Users size={20} className="text-slate-400 group-hover:text-primary transition-colors" />
+                  </div>
+                  <div>
+                     <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Active Stakeholders</p>
+                     <p className="text-sm font-black dark:text-slate-100">8 Residents • 2 Brokers</p>
+                  </div>
+               </div>
+               <div className="flex -space-x-3 pr-2">
+                  {[1, 2, 3].map((i) => (
+                     <div key={i} className="w-8 h-8 rounded-xl border-2 border-white dark:border-slate-900 bg-slate-200 overflow-hidden shadow-md">
+                        <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + parseInt(selectedProperty.id)}`} alt="User" />
+                     </div>
+                  ))}
+               </div>
+            </div>
+
+            <div className="flex gap-4 pt-2">
+               <button 
+                 onClick={() => addToast('Comprehensive Property Audit generated and downloading...', 'success')}
+                 className="flex-1 py-4 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all glow-primary"
+               >
+                  Download Full Audit
+               </button>
+               <button onClick={() => setIsDetailModalOpen(false)} className="px-8 py-4 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+                  Close
+               </button>
+            </div>
+          </div>
+        )}
       </Modal>
     </motion.div>
   );

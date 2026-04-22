@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Building2, 
@@ -40,11 +40,13 @@ const Dashboard: React.FC = () => {
   const { isDark } = useTheme();
   const { stats, transactions } = useData();
 
+  const [metric, setMetric] = useState<'revenue' | 'yield'>('revenue');
+
   const chartData = [
-    { name: 'Jan', revenue: 4000 },
-    { name: 'Feb', revenue: 3000 },
-    { name: 'Mar', revenue: 5000 },
-    { name: 'Apr', revenue: stats.totalRevenue || 4500 },
+    { name: 'Jan', revenue: 4000, yield: 85 },
+    { name: 'Feb', revenue: 3000, yield: 82 },
+    { name: 'Mar', revenue: 5000, yield: 91 },
+    { name: 'Apr', revenue: stats.totalRevenue || 4500, yield: stats.occupancyRate || 88 },
   ];
 
   return (
@@ -136,8 +138,24 @@ const Dashboard: React.FC = () => {
         <motion.div variants={itemVariants} className="lg:col-span-2 glass-card p-10 rounded-[3rem] border border-white/20 dark:border-slate-800/50 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 p-8 flex gap-4">
              <div className="flex bg-slate-100 dark:bg-slate-800/80 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800/50 shadow-inner">
-                <button className="px-5 py-2 rounded-xl text-[10px] font-black uppercase bg-white dark:bg-slate-700 text-primary shadow-md transition-all">Revenue</button>
-                <button className="px-5 py-2 rounded-xl text-[10px] font-black uppercase text-slate-400 hover:text-slate-600 transition-all">Yield</button>
+                <button 
+                  onClick={() => setMetric('revenue')}
+                  className={cn(
+                    "px-5 py-2 rounded-xl text-[10px] font-black uppercase transition-all",
+                    metric === 'revenue' ? "bg-white dark:bg-slate-700 text-primary shadow-md" : "text-slate-400 hover:text-slate-600"
+                  )}
+                >
+                  Revenue
+                </button>
+                <button 
+                  onClick={() => setMetric('yield')}
+                  className={cn(
+                    "px-5 py-2 rounded-xl text-[10px] font-black uppercase transition-all",
+                    metric === 'yield' ? "bg-white dark:bg-slate-700 text-primary shadow-md" : "text-slate-400 hover:text-slate-600"
+                  )}
+                >
+                  Yield
+                </button>
              </div>
              <button className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl hover:text-primary transition-all shadow-sm">
                 <Filter size={18} className="dark:text-slate-400 hover:text-inherit" />
@@ -172,7 +190,7 @@ const Dashboard: React.FC = () => {
                   }}
                   itemStyle={{ color: '#fff', fontWeight: '900' }}
                 />
-                <Area type="monotone" dataKey="revenue" stroke="#2563EB" strokeWidth={5} fillOpacity={1} fill="url(#colorRevenue)" dot={{ r: 6, fill: '#2563EB', strokeWidth: 3, stroke: isDark ? '#0F172A' : '#fff' }} />
+                <Area type="monotone" dataKey={metric} stroke="#2563EB" strokeWidth={5} fillOpacity={1} fill="url(#colorRevenue)" dot={{ r: 6, fill: '#2563EB', strokeWidth: 3, stroke: isDark ? '#0F172A' : '#fff' }} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -182,7 +200,7 @@ const Dashboard: React.FC = () => {
         <motion.div variants={itemVariants} className="space-y-6">
            <div className="flex items-center justify-between px-2">
               <h3 className="text-xl font-black italic dark:text-white">Intelligence Feed</h3>
-              <button className="text-[10px] font-black uppercase text-primary tracking-widest hover:brightness-110 transition-all">Global View</button>
+              <Link to="/properties" className="text-[10px] font-black uppercase text-primary tracking-widest hover:brightness-110 transition-all decoration-none">Global View</Link>
            </div>
            
            <div className="glass-card p-8 rounded-[3rem] border border-white/20 dark:border-slate-800/50 shadow-2xl h-[470px] overflow-y-auto space-y-6 scrollbar-hide">
@@ -212,10 +230,10 @@ const Dashboard: React.FC = () => {
               )}
            </div>
            
-           <button className="w-full py-5 bg-linear-to-br from-indigo-600 to-primary rounded-3xl text-white font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
+           <Link to="/reports" className="w-full py-5 bg-linear-to-br from-indigo-600 to-primary rounded-3xl text-white font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 decoration-none">
               Full Analytics Report
               <ArrowRight size={18} />
-           </button>
+           </Link>
         </motion.div>
       </div>
     </motion.div>

@@ -42,8 +42,15 @@ const distributionData = [
   { name: 'Industrial', value: 10, color: '#F59E0B' },
 ];
 
+import { useToast } from '@/components/Toasts';
+
 const Reports: React.FC = () => {
   const { isDark } = useTheme();
+  const { addToast } = useToast();
+
+  const handleExport = () => {
+    addToast('Financial Ledger exported successfully as PDF.', 'success');
+  };
 
   return (
     <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-700 pb-12">
@@ -63,7 +70,10 @@ const Reports: React.FC = () => {
             <Calendar size={18} />
             <span>Last 6 Months</span>
           </button>
-          <button className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-700 transition-all font-bold shadow-lg shadow-indigo-500/20 glow-primary whitespace-nowrap active:scale-95">
+          <button 
+            onClick={handleExport}
+            className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-700 transition-all font-bold shadow-lg shadow-indigo-500/20 glow-primary whitespace-nowrap active:scale-95"
+          >
             <Download size={18} />
             <span>Export Financials</span>
           </button>

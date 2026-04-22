@@ -12,24 +12,30 @@ import Reports from './pages/Reports';
 import './translations/i18n';
 
 import { ThemeProvider } from './contexts/ThemeContext';
+import { DataProvider } from './contexts/DataContext';
+import { ToastProvider } from './components/Toasts';
 
 const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <Router>
-        <DashboardLayout>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/properties" element={<Properties />} />
-          <Route path="/tenants" element={<Tenants />} />
-          <Route path="/payments" element={<Payments />} />
-          <Route path="/maintenance" element={<Maintenance />} />
-          <Route path="/brokers" element={<Brokers />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/settings" element={<Settings />} />
-        </Routes>
-      </DashboardLayout>
-      </Router>
+      <ToastProvider>
+        <DataProvider>
+          <Router>
+          <DashboardLayout>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/properties" element={<Properties />} />
+            <Route path="/tenants" element={<Tenants />} />
+            <Route path="/payments" element={<Payments />} />
+            <Route path="/maintenance" element={<Maintenance />} />
+            <Route path="/brokers" element={<Brokers />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/settings" element={<Settings />} />
+          </Routes>
+        </DashboardLayout>
+        </Router>
+      </DataProvider>
+      </ToastProvider>
     </ThemeProvider>
   );
 };

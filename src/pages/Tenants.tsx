@@ -11,50 +11,15 @@ import {
   CheckCircle2,
   ArrowRight,
   TrendingUp,
-  CreditCard
+  CreditCard,
+  Trash2,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import Modal from '@/components/Modal';
 
-const mockTenants = [
-  { 
-    id: 1, 
-    name: "Ali Omar", 
-    property: "Villa Hodan", 
-    unit: "B-402", 
-    status: "active", 
-    phone: "+252 61 555 0123", 
-    email: "ali.omar@email.so",
-    joinDate: "Jan 2024",
-    paymentStatus: "paid",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ali"
-  },
-  { 
-    id: 2, 
-    name: "Hafsa Ahmed", 
-    property: "Blue Sky Apt", 
-    unit: "302", 
-    status: "active", 
-    phone: "+252 61 555 0456", 
-    email: "hafsa.a@email.so",
-    joinDate: "Mar 2024",
-    paymentStatus: "pending",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Hafsa"
-  },
-  { 
-    id: 3, 
-    name: "Khalid Yusuf", 
-    property: "Commercial Hub", 
-    unit: "10", 
-    status: "active", 
-    phone: "+252 61 555 0789", 
-    email: "khalid.y@email.so",
-    joinDate: "Dec 2023",
-    paymentStatus: "paid",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Khalid"
-  },
-];
+import { useData } from '@/contexts/DataContext';
+import { useToast } from '@/components/Toasts';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -70,18 +35,37 @@ const itemVariants = {
 };
 
 const Tenants: React.FC = () => {
+  const { tenants, properties, addTenant, deleteTenant } = useData();
+  const { addToast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const filteredTenants = mockTenants.filter(t => 
+  // Form State
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    propertyId: properties[0]?.id || '',
+    unit: ''
+  });
+
+  const filteredTenants = tenants.filter(t => 
     t.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    t.property.toLowerCase().includes(searchQuery.toLowerCase())
+    t.propertyName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleAddTenant = (e: React.FormEvent) => {
     e.preventDefault();
+    const selectedProp = properties.find(p => p.id === formData.propertyId);
+    if (!selectedProp) return;
+
+    addTenant({
+      ...formData,
+      propertyName: selectedProp.name
+    });
+    addToast(`${formData.name} successfully onboarded.`, 'success');
     setIsAddModalOpen(false);
-    alert('Tenant record successfully committed to the registry.');
+    setFormData({ name: '', phone: '', email: '', propertyId: properties[0]?.id || '', unit: '' });
   };
 
   return (
@@ -182,7 +166,7 @@ const Tenants: React.FC = () => {
                         <Home size={16} className="text-emerald-600" />
                      </div>
                      <div>
-                        <p className="text-xs font-black dark:text-slate-100">{tenant.property}</p>
+                        <p className="text-xs font-black dark:text-slate-100">{tenant.propertyName}</p>
                         <p className="text-[10px] font-bold text-slate-400">Unit {tenant.unit}</p>
                      </div>
                   </div>
@@ -207,13 +191,24 @@ const Tenants: React.FC = () => {
               </div>
 
               <div className="mt-8 pt-8 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between relative z-10">
+                 <div className="flex items-center gap-3">
+                    <button 
+                      onClick={() => {
+                        deleteTenant(tenant.id);
+                        addToast("Resident offboarded successfully.", "info");
+                      }}
+                      className="p-2.5 bg-rose-50 dark:bg-rose-900/10 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                    >
+                       <Trash2 size={16} />
+                    </button>
+                    <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:translate-x-1 transition-all">
+                       Full Ledger <ArrowRight size={14} />
+                    </button>
+                 </div>
                  <div className="flex items-center gap-2">
                     <Calendar size={14} className="text-slate-400" />
-                    <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Resident since {tenant.joinDate}</span>
+                    <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{tenant.joinDate}</span>
                  </div>
-                 <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:translate-x-1 transition-all">
-                    Full Ledger <ArrowRight size={14} />
-                 </button>
               </div>
             </motion.div>
           ))}
@@ -225,32 +220,63 @@ const Tenants: React.FC = () => {
         <form onSubmit={handleAddTenant} className="space-y-6">
           <div className="space-y-2">
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Full Legal Name</label>
-            <input type="text" required placeholder="e.g. Hassan Ahmed" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" />
+            <input 
+              type="text" 
+              required 
+              placeholder="e.g. Hassan Ahmed" 
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" 
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Primary Phone</label>
-              <input type="tel" required placeholder="+252..." className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" />
+              <input 
+                type="tel" 
+                required 
+                placeholder="+252..." 
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" 
+              />
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Email Address</label>
-              <input type="email" required placeholder="hassan@email.so" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" />
+              <input 
+                type="email" 
+                required 
+                placeholder="hassan@email.so" 
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" 
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Property</label>
-              <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold appearance-none dark:text-slate-100">
-                 <option className="bg-white dark:bg-slate-900">Villa Hodan</option>
-                 <option className="bg-white dark:bg-slate-900">Blue Sky Apt</option>
-                 <option className="bg-white dark:bg-slate-900">Commercial Hub</option>
+              <select 
+                required 
+                value={formData.propertyId}
+                onChange={(e) => setFormData({ ...formData, propertyId: e.target.value })}
+                className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold appearance-none dark:text-slate-100"
+              >
+                 {properties.map(p => <option key={p.id} value={p.id} className="bg-white dark:bg-slate-900">{p.name}</option>)}
               </select>
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Unit Number</label>
-              <input type="text" required placeholder="e.g. 402" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" />
+              <input 
+                type="text" 
+                required 
+                placeholder="e.g. 402" 
+                value={formData.unit}
+                onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
+                className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" 
+              />
             </div>
           </div>
 

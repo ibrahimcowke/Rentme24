@@ -46,7 +46,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFDFF] dark:bg-[#060810] text-slate-900 dark:text-slate-100 flex overflow-hidden font-inter transition-colors duration-500">
+    <div className="min-h-screen bg-background text-slate-900 dark:text-slate-100 flex overflow-hidden font-inter transition-colors duration-500">
       <AnimatePresence>
         {!isSidebarOpen && (
           <motion.div 
@@ -61,7 +61,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
 
       <aside 
         className={cn(
-          "fixed md:static inset-y-0 left-0 z-50 transform transition-all duration-500 ease-in-out bg-white dark:bg-[#0B1120] border-r border-slate-200 dark:border-slate-800/50",
+          "fixed md:static inset-y-0 left-0 z-50 transform transition-all duration-500 ease-in-out bg-card dark:bg-[#0B1120] border-r border-slate-200 dark:border-slate-800/50",
           isSidebarOpen ? "w-72" : "w-20 -translate-x-full md:translate-x-0"
         )}
       >
@@ -147,7 +147,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
         {/* Cinematic Backdrop Bloom */}
         <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-primary/5 dark:bg-primary/10 blur-[120px] pointer-events-none -z-10" />
 
-        <header className="h-20 flex items-center justify-between px-8 sticky top-0 bg-white/70 dark:bg-[#060810]/70 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
+        <header className="h-20 flex items-center justify-between px-8 sticky top-0 bg-background/70 dark:bg-[#060810]/70 backdrop-blur-xl z-30 border-b border-slate-100 dark:border-slate-800/50">
            <div className="flex items-center gap-4">
               <button 
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}

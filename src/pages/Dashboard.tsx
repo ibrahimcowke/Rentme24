@@ -1,30 +1,25 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { 
   Building2, 
+  Users, 
   DollarSign, 
-  TrendingUp, 
-  Search,
-  Bell,
-  ShieldCheck,
-  Zap,
-  Activity,
+  Activity, 
+  MapPin, 
+  Search, 
+  Bell, 
+  ShieldCheck, 
+  Clock, 
+  Filter,
   ArrowRight,
-  MapPin
+  Plus,
+  FileText
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from '@/utils/cn';
-import { MOGADISHU_DISTRICTS } from '@/constants/districts';
 import { useTheme } from '@/contexts/ThemeContext';
-
-const data = [
-  { name: 'Jan', revenue: 4000 },
-  { name: 'Feb', revenue: 3000 },
-  { name: 'Mar', revenue: 5000 },
-  { name: 'Apr', revenue: 4500 },
-  { name: 'May', revenue: 6000 },
-  { name: 'Jun', revenue: 5500 },
-];
+import { useData } from '@/contexts/DataContext';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -43,6 +38,14 @@ const itemVariants = {
 
 const Dashboard: React.FC = () => {
   const { isDark } = useTheme();
+  const { stats, transactions } = useData();
+
+  const chartData = [
+    { name: 'Jan', revenue: 4000 },
+    { name: 'Feb', revenue: 3000 },
+    { name: 'Mar', revenue: 5000 },
+    { name: 'Apr', revenue: stats.totalRevenue || 4500 },
+  ];
 
   return (
     <motion.div 
@@ -80,13 +83,33 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
+      {/* Quick Command Center */}
+      <motion.div variants={itemVariants} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label: 'Register Asset', sub: 'New Property', icon: Plus, path: '/properties', color: 'bg-primary' },
+          { label: 'Onboard Resident', sub: 'New Tenant', icon: Users, path: '/tenants', color: 'bg-emerald-600' },
+          { label: 'Post Payment', sub: 'Rent Entry', icon: DollarSign, path: '/payments', color: 'bg-indigo-600' },
+          { label: 'Issue Report', sub: 'Export PDF', icon: FileText, path: '/reports', color: 'bg-slate-900' },
+        ].map((action, i) => (
+          <Link key={i} to={action.path} className="glass-card p-6 rounded-3xl border border-white/20 dark:border-slate-800/50 shadow-lg group hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-4">
+            <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg transition-transform group-hover:rotate-12", action.color)}>
+              <action.icon size={24} />
+            </div>
+            <div className="text-left">
+              <p className="text-xs font-black tracking-tight dark:text-white uppercase">{action.label}</p>
+              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{action.sub}</p>
+            </div>
+          </Link>
+        ))}
+      </motion.div>
+
       {/* Core KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { title: 'Total Revenue', value: '$24,500', trend: '+12.5%', icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-          { title: 'Active Units', value: '142', trend: '+4%', icon: Building2, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+          { title: 'Total Revenue', value: `$${stats.totalRevenue.toLocaleString()}`, trend: '+12.5%', icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+          { title: 'Active Units', value: stats.activeUnits.toString(), trend: '+4%', icon: Building2, color: 'text-blue-500', bg: 'bg-blue-500/10' },
           { title: 'Market Reach', value: '20 Dis', trend: 'Global', icon: MapPin, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
-          { title: 'Occupancy', value: '94.2%', trend: '+2.1%', icon: Activity, color: 'text-amber-500', bg: 'bg-amber-500/10' },
+          { title: 'Occupancy', value: `${stats.occupancyRate}%`, trend: '+2.1%', icon: Activity, color: 'text-amber-500', bg: 'bg-amber-500/10' },
         ].map((kpi, i) => (
           <motion.div
             key={i}
@@ -108,25 +131,27 @@ const Dashboard: React.FC = () => {
         ))}
       </div>
 
-      {/* Strategic Insights Grid */}
+      {/* Quick Actions & Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Performance Chart */}
         <motion.div variants={itemVariants} className="lg:col-span-2 glass-card p-10 rounded-[3rem] border border-white/20 dark:border-slate-800/50 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-10 hidden sm:flex gap-4">
-             <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700">
-                <span className="w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(37,99,235,0.6)]" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">Revenue Stream</span>
+          <div className="absolute top-0 right-0 p-8 flex gap-4">
+             <div className="flex bg-slate-100 dark:bg-slate-800/80 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800/50 shadow-inner">
+                <button className="px-5 py-2 rounded-xl text-[10px] font-black uppercase bg-white dark:bg-slate-700 text-primary shadow-md transition-all">Revenue</button>
+                <button className="px-5 py-2 rounded-xl text-[10px] font-black uppercase text-slate-400 hover:text-slate-600 transition-all">Yield</button>
              </div>
+             <button className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl hover:text-primary transition-all shadow-sm">
+                <Filter size={18} className="dark:text-slate-400 hover:text-inherit" />
+             </button>
           </div>
           
-          <div className="mb-10">
-            <h3 className="text-2xl font-black italic mb-2 dark:text-white">Revenue Growth</h3>
-            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">Performance metrics across the entire Mogadishu landscape.</p>
+          <div className="mb-12">
+            <h3 className="text-2xl font-black italic mb-1 dark:text-white">Performance Velocity</h3>
+            <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Analytics cluster 24A-2.43</p>
           </div>
 
           <div className="h-[350px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data}>
+              <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#2563EB" stopOpacity={isDark ? 0.4 : 0.3}/>
@@ -161,30 +186,30 @@ const Dashboard: React.FC = () => {
            </div>
            
            <div className="glass-card p-8 rounded-[3rem] border border-white/20 dark:border-slate-800/50 shadow-2xl h-[470px] overflow-y-auto space-y-6 scrollbar-hide">
-              {[
-                { title: 'New Lease: Villa Hodan', time: '12m ago', type: 'success', icon: ShieldCheck, desc: 'Ali Omar finalized contract for Unit B-202' },
-                { title: 'System Expansion', time: '45m ago', type: 'info', icon: Zap, desc: `Successfully integrated ${MOGADISHU_DISTRICTS.length} Districts` },
-                { title: 'Maintenance Alert', time: '2h ago', type: 'warning', icon: Activity, desc: 'Plumbing request received from Blue Sky Apt' },
-                { title: 'Revenue Milestone', time: '4h ago', type: 'success', icon: TrendingUp, desc: 'Monthly target reached 10 days early' },
-              ].map((feed, i) => (
-                <div key={i} className="flex gap-5 group cursor-pointer">
-                   <div className={cn(
-                     "w-12 h-12 shrink-0 rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 shadow-lg shadow-black/5",
-                     feed.type === 'success' ? 'bg-emerald-500/10 text-emerald-600' :
-                     feed.type === 'info' ? 'bg-blue-500/10 text-blue-600' :
-                     'bg-amber-500/10 text-amber-600'
-                   )}>
-                      <feed.icon size={24} />
-                   </div>
-                   <div className="border-b border-slate-100 dark:border-slate-800/50 pb-5 flex-1 group-last:border-none">
-                      <div className="flex justify-between items-start mb-1">
-                         <h4 className="text-sm font-black group-hover:text-primary transition-colors dark:text-slate-100">{feed.title}</h4>
-                         <span className="text-[10px] font-bold text-slate-400">{feed.time}</span>
-                      </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">{feed.desc}</p>
-                   </div>
+              {transactions.length > 0 ? (
+                transactions.slice(0, 5).map((tx, i) => (
+                  <div key={i} className="flex gap-5 group cursor-pointer">
+                    <div className={cn(
+                      "w-12 h-12 shrink-0 rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 shadow-lg shadow-black/5",
+                      tx.status === 'completed' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'
+                    )}>
+                        {tx.status === 'completed' ? <ShieldCheck size={24} /> : <Clock size={24} />}
+                    </div>
+                    <div className="border-b border-slate-100 dark:border-slate-800/50 pb-5 flex-1 group-last:border-none">
+                        <div className="flex justify-between items-start mb-1">
+                          <h4 className="text-sm font-black group-hover:text-primary transition-colors dark:text-slate-100">{tx.type === 'rent' ? 'Rental Payment' : 'Internal Transfer'}</h4>
+                          <span className="text-[10px] font-bold text-slate-400">{tx.date}</span>
+                        </div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">{tx.tenantName} processed ${tx.amount} for {tx.propertyName}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full text-slate-400 space-y-4">
+                  <Activity size={48} className="opacity-20 translate-y-2 animate-pulse" />
+                  <p className="text-[10px] font-black uppercase tracking-widest">No active intelligence</p>
                 </div>
-              ))}
+              )}
            </div>
            
            <button className="w-full py-5 bg-linear-to-br from-indigo-600 to-primary rounded-3xl text-white font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">

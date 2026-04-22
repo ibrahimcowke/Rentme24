@@ -11,18 +11,15 @@ import {
   Store,
   ArrowRight,
   TrendingUp,
+  Trash2,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import { MOGADISHU_DISTRICTS } from '@/constants/districts';
 import Modal from '@/components/Modal';
 
-const mockProperties = [
-  { id: 1, name: "Villa Hodan", code: "HOD-001", type: "house", district: "Hodan", rent: 500, status: "occupied", image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&q=80&w=600" },
-  { id: 2, name: "Blue Sky Apartment", code: "WAD-042", type: "apartment", district: "Wadajir", rent: 350, status: "available", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=600" },
-  { id: 3, name: "Commercial Hub", code: "XW-105", type: "office", district: "Hamar-Weyne", rent: 1200, status: "occupied", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600" },
-  { id: 4, name: "Sunset Residence", code: "DAR-009", type: "house", district: "Darussalam", rent: 600, status: "available", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=600" },
-];
+import { useData } from '@/contexts/DataContext';
+import { useToast } from '@/components/Toasts';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -38,12 +35,23 @@ const itemVariants = {
 };
 
 const Properties: React.FC = () => {
+  const { properties, addProperty, deleteProperty } = useData();
+  const { addToast } = useToast();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('All Districts');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const filteredProperties = mockProperties.filter(prop => {
+  // Form State
+  const [formData, setFormData] = useState({
+    name: '',
+    code: '',
+    district: MOGADISHU_DISTRICTS[0],
+    type: 'house' as 'house' | 'apartment' | 'office',
+    rent: 0
+  });
+
+  const filteredProperties = properties.filter(prop => {
     const matchesSearch = prop.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                          prop.code.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesDistrict = selectedDistrict === 'All Districts' || prop.district === selectedDistrict;
@@ -52,8 +60,10 @@ const Properties: React.FC = () => {
 
   const handleAddAsset = (e: React.FormEvent) => {
     e.preventDefault();
+    addProperty(formData);
+    addToast(`${formData.name} successfully provisioned.`, 'success');
     setIsAddModalOpen(false);
-    alert('Asset successfully provisioned in the registry.');
+    setFormData({ name: '', code: '', district: MOGADISHU_DISTRICTS[0], type: 'house', rent: 0 });
   };
 
   return (
@@ -198,19 +208,27 @@ const Properties: React.FC = () => {
                   </div>
 
                   <div className="pt-6 border-t border-slate-100 dark:border-slate-800/50 flex items-center justify-between">
+                     <div className="flex items-center gap-4">
+                        <button 
+                          onClick={() => {
+                            deleteProperty(prop.id);
+                            addToast("Asset removed from registry.", "info");
+                          }}
+                          className="p-2.5 bg-rose-50 dark:bg-rose-900/10 text-rose-500 rounded-xl hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                        >
+                           <Trash2 size={16} />
+                        </button>
+                        <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:translate-x-1 transition-all">
+                           Deep Review <ArrowRight size={14} />
+                        </button>
+                     </div>
                      <div className="flex -space-x-3">
-                        {[1, 2, 3].map((i) => (
+                        {[1, 2].map((i) => (
                            <div key={i} className="w-10 h-10 rounded-2xl border-4 border-white dark:border-slate-900 bg-slate-100 overflow-hidden shadow-lg">
-                              <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + prop.id}`} alt="User" />
+                              <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + parseInt(prop.id)}`} alt="User" />
                            </div>
                         ))}
-                        <div className="w-10 h-10 rounded-2xl border-4 border-white dark:border-slate-900 bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-[10px] font-black text-slate-400 shadow-md">
-                           +2
-                        </div>
                      </div>
-                     <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:translate-x-1 transition-all">
-                        Deep Review <ArrowRight size={14} />
-                     </button>
                   </div>
                 </div>
               </motion.div>
@@ -273,17 +291,36 @@ const Properties: React.FC = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Asset Name</label>
-              <input type="text" required placeholder="e.g. Ocean View" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold dark:text-slate-100" />
+              <input 
+                type="text" 
+                required 
+                placeholder="e.g. Ocean View" 
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold dark:text-slate-100" 
+              />
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Unique Code</label>
-              <input type="text" required placeholder="e.g. OV-101" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold dark:text-slate-100" />
+              <input 
+                type="text" 
+                required 
+                placeholder="e.g. OV-101" 
+                value={formData.code}
+                onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold dark:text-slate-100" 
+              />
             </div>
           </div>
           
           <div className="space-y-2">
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">District</label>
-            <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold appearance-none dark:text-slate-100">
+            <select 
+              required 
+              value={formData.district}
+              onChange={(e) => setFormData({ ...formData, district: e.target.value })}
+              className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold appearance-none dark:text-slate-100"
+            >
                {MOGADISHU_DISTRICTS.map(d => <option key={d} value={d} className="bg-white dark:bg-slate-900">{d}</option>)}
             </select>
           </div>
@@ -291,7 +328,12 @@ const Properties: React.FC = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Asset Type</label>
-              <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold appearance-none dark:text-slate-100">
+              <select 
+                required 
+                value={formData.type}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+                className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold appearance-none dark:text-slate-100"
+              >
                  <option value="house" className="bg-white dark:bg-slate-900">Residential House</option>
                  <option value="apartment" className="bg-white dark:bg-slate-900">Apartment Suite</option>
                  <option value="office" className="bg-white dark:bg-slate-900">Commercial Office</option>
@@ -299,7 +341,14 @@ const Properties: React.FC = () => {
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Monthly Rent ($)</label>
-              <input type="number" required placeholder="450" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold dark:text-slate-100" />
+              <input 
+                type="number" 
+                required 
+                placeholder="450" 
+                value={formData.rent || ''}
+                onChange={(e) => setFormData({ ...formData, rent: Number(e.target.value) })}
+                className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-bold dark:text-slate-100" 
+              />
             </div>
           </div>
 

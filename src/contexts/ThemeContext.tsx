@@ -1,10 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-type Theme = 'light' | 'dark' | 'system';
+type ColorTheme = 'default' | 'royal' | 'emerald' | 'rose';
+type ThemeMode = 'light' | 'dark' | 'system';
 
 interface ThemeContextType {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
+  mode: ThemeMode;
+  colorTheme: ColorTheme;
+  setMode: (mode: ThemeMode) => void;
+  setColorTheme: (theme: ColorTheme) => void;
   toggleTheme: () => void;
   isDark: boolean;
 }
@@ -12,57 +15,75 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>(() => {
+  const [mode, setMode] = useState<ThemeMode>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('guriflow-theme');
-      if (saved) return saved as Theme;
+      const saved = localStorage.getItem('guriflow-mode');
+      if (saved) return saved as ThemeMode;
       return 'system';
     }
     return 'system';
   });
 
-  const [activeTheme, setActiveTheme] = useState<'light' | 'dark'>('light');
+  const [colorTheme, setColorTheme] = useState<ColorTheme>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('guriflow-color-theme');
+      if (saved) return saved as ColorTheme;
+      return 'default';
+    }
+    return 'default';
+  });
+
+  const [activeMode, setActiveMode] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
-    const handleThemeChange = (e: MediaQueryListEvent | MediaQueryList) => {
-      if (theme === 'system') {
-        const newTheme = e.matches ? 'dark' : 'light';
-        setActiveTheme(newTheme);
+    const handleModeChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      if (mode === 'system') {
+        const newMode = e.matches ? 'dark' : 'light';
+        setActiveMode(newMode);
       }
     };
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     
-    if (theme === 'system') {
-      handleThemeChange(mediaQuery);
-      mediaQuery.addEventListener('change', handleThemeChange);
+    if (mode === 'system') {
+      handleModeChange(mediaQuery);
+      mediaQuery.addEventListener('change', handleModeChange);
     } else {
-      setActiveTheme(theme);
+      setActiveMode(mode);
     }
 
-    return () => mediaQuery.removeEventListener('change', handleThemeChange);
-  }, [theme]);
+    return () => mediaQuery.removeEventListener('change', handleModeChange);
+  }, [mode]);
 
   useEffect(() => {
     const root = window.document.documentElement;
-    if (activeTheme === 'dark') {
+    
+    // Handle light/dark class
+    if (activeMode === 'dark') {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
     }
-    localStorage.setItem('guriflow-theme', theme);
-  }, [activeTheme, theme]);
+
+    // Handle color theme data attribute
+    root.setAttribute('data-theme', colorTheme);
+
+    localStorage.setItem('guriflow-mode', mode);
+    localStorage.setItem('guriflow-color-theme', colorTheme);
+  }, [activeMode, mode, colorTheme]);
 
   const toggleTheme = () => {
-    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+    setMode(prev => (prev === 'light' ? 'dark' : 'light'));
   };
 
   return (
     <ThemeContext.Provider value={{ 
-      theme, 
-      setTheme, 
-      toggleTheme, 
-      isDark: activeTheme === 'dark' 
+      mode, 
+      colorTheme,
+      setMode, 
+      setColorTheme,
+      toggleTheme,
+      isDark: activeMode === 'dark' 
     }}>
       {children}
     </ThemeContext.Provider>

@@ -16,12 +16,8 @@ import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import Modal from '@/components/Modal';
 
-const transactions = [
-  { id: 'PAY-771', tenant: 'Ali Omar', property: 'Villa Hodan', amount: 500, type: 'rent', method: 'Mobile Money', date: '2024-03-20', status: 'completed' },
-  { id: 'PAY-772', tenant: 'Hafsa Ahmed', property: 'Blue Sky Apt', amount: 350, type: 'rent', method: 'e-Dahab', date: '2024-03-19', status: 'pending' },
-  { id: 'PAY-773', tenant: 'Khalid Yusuf', property: 'Commercial Hub', amount: 1200, type: 'rent', method: 'Bank Transfer', date: '2024-03-18', status: 'completed' },
-  { id: 'PAY-774', tenant: 'Zahra Hassan', property: 'Villa Hodan', amount: 450, type: 'deposit', method: 'Mobile Money', date: '2024-03-15', status: 'completed' },
-];
+import { useData } from '@/contexts/DataContext';
+import { useToast } from '@/components/Toasts';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -37,8 +33,19 @@ const itemVariants = {
 };
 
 const Payments: React.FC = () => {
+  const { transactions, tenants, addTransaction, stats } = useData();
+  const { addToast } = useToast();
   const [filter, setFilter] = useState<'all' | 'completed' | 'pending'>('all');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  // Form State
+  const [formData, setFormData] = useState({
+    tenantId: tenants[0]?.id || '',
+    amount: 0,
+    method: 'Mobile Money (EVC Plus)',
+    type: 'rent' as 'rent' | 'deposit' | 'maintenance',
+    status: 'completed' as 'completed' | 'pending'
+  });
 
   const filteredTransactions = transactions.filter(tx => 
     filter === 'all' || tx.status === filter
@@ -46,8 +53,25 @@ const Payments: React.FC = () => {
 
   const handlePostPayment = (e: React.FormEvent) => {
     e.preventDefault();
+    const tenant = tenants.find(t => t.id === formData.tenantId);
+    if (!tenant) return;
+
+    addTransaction({
+      ...formData,
+      tenantName: tenant.name,
+      propertyId: tenant.propertyId,
+      propertyName: tenant.propertyName
+    });
+    addToast(`Payment of $${formData.amount} posted for ${tenant.name}.`, 'success');
+    
     setIsAddModalOpen(false);
-    alert('Payment successfully posted to the digital ledger.');
+    setFormData({ 
+      tenantId: tenants[0]?.id || '', 
+      amount: 0, 
+      method: 'Mobile Money (EVC Plus)', 
+      type: 'rent',
+      status: 'completed'
+    });
   };
 
   return (
@@ -152,8 +176,8 @@ const Payments: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-8 py-5">
-                      <p className="font-black text-sm dark:text-slate-200">{tx.tenant}</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{tx.property}</p>
+                      <p className="font-black text-sm dark:text-slate-200">{tx.tenantName}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{tx.propertyName}</p>
                     </td>
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-2">
@@ -205,7 +229,7 @@ const Payments: React.FC = () => {
               <div className="p-6 bg-linear-to-br from-emerald-600 to-teal-500 rounded-4xl text-white shadow-xl relative overflow-hidden group glow-primary">
                  <div className="absolute top-0 right-0 p-4 opacity-30 group-hover:scale-110 transition-transform"><TrendingUp size={48} /></div>
                  <h4 className="text-lg font-black italic mb-2 relative z-10 text-emerald-50">Revenue Yield</h4>
-                 <p className="text-4xl font-black tracking-tighter mb-4 relative z-10">94.2%</p>
+                 <p className="text-4xl font-black tracking-tighter mb-4 relative z-10">{stats.occupancyRate}%</p>
                  <button className="w-full py-3 bg-white/20 backdrop-blur-md rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/30 transition-all border border-white/10">Full Settlement</button>
               </div>
 
@@ -228,32 +252,57 @@ const Payments: React.FC = () => {
         <form onSubmit={handlePostPayment} className="space-y-6">
           <div className="space-y-2">
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Select Resident</label>
-            <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold appearance-none dark:text-slate-100">
-                 <option className="bg-white dark:bg-slate-900">Ali Omar (Villa Hodan)</option>
-                 <option className="bg-white dark:bg-slate-900">Hafsa Ahmed (Blue Sky Apt)</option>
-                 <option className="bg-white dark:bg-slate-900">Khalid Yusuf (Commercial Hub)</option>
+            <select 
+              required 
+              value={formData.tenantId}
+              onChange={(e) => setFormData({ ...formData, tenantId: e.target.value })}
+              className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold appearance-none dark:text-slate-100"
+            >
+              {tenants.map(t => (
+                 <option key={t.id} value={t.id} className="bg-white dark:bg-slate-900">{t.name} ({t.propertyName})</option>
+              ))}
             </select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Payment Method</label>
-              <select required className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold appearance-none dark:text-slate-100">
-                 <option className="bg-white dark:bg-slate-900">Mobile Money (EVC Plus)</option>
-                 <option className="bg-white dark:bg-slate-900">e-Dahab</option>
-                 <option className="bg-white dark:bg-slate-900">Bank Transfer</option>
-                 <option className="bg-white dark:bg-slate-900">Cash</option>
+              <select 
+                required 
+                value={formData.method}
+                onChange={(e) => setFormData({ ...formData, method: e.target.value })}
+                className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold appearance-none dark:text-slate-100"
+              >
+                 <option value="Mobile Money (EVC Plus)" className="bg-white dark:bg-slate-900">Mobile Money (EVC Plus)</option>
+                 <option value="e-Dahab" className="bg-white dark:bg-slate-900">e-Dahab</option>
+                 <option value="Bank Transfer" className="bg-white dark:bg-slate-900">Bank Transfer</option>
+                 <option value="Cash" className="bg-white dark:bg-slate-900">Cash</option>
               </select>
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Amount ($)</label>
-              <input type="number" required placeholder="500" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" />
+              <input 
+                type="number" 
+                required 
+                placeholder="500" 
+                value={formData.amount || ''}
+                onChange={(e) => setFormData({ ...formData, amount: Number(e.target.value) })}
+                className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" 
+              />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Transaction Ref (Optional)</label>
-            <input type="text" placeholder="e.g. TX-99281" className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold dark:text-slate-100" />
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Status</label>
+            <select 
+              required 
+              value={formData.status}
+              onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+              className="w-full px-5 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold appearance-none dark:text-slate-100"
+            >
+               <option value="completed" className="bg-white dark:bg-slate-900">Completed (Paid)</option>
+               <option value="pending" className="bg-white dark:bg-slate-900">Pending (Due)</option>
+            </select>
           </div>
 
           <button type="submit" className="w-full py-4 bg-emerald-600 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4 glow-primary">

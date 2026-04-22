@@ -68,6 +68,27 @@
     --radius: 1rem;
   }
 
+  /* Royal Theme (Purple/Gold) */
+  [data-theme='royal'] {
+    --primary: 262.1 83.3% 57.8%; /* Purple 600 */
+    --accent: 45.4 93.4% 47.5%; /* Gold/Amber 600 */
+    --ring: 262.1 83.3% 57.8%;
+  }
+
+  /* Emerald Theme (Emerald/Teal) */
+  [data-theme='emerald'] {
+    --primary: 160.1 84.1% 39.4%; /* Emerald 600 */
+    --accent: 188.7 94.5% 42.7%; /* Teal 600 */
+    --ring: 160.1 84.1% 39.4%;
+  }
+
+  /* Rose Theme (Rose/Crimson) */
+  [data-theme='rose'] {
+    --primary: 346.8 77.2% 49.8%; /* Rose 600 */
+    --accent: 350.5 70.3% 40.2%; /* Crimson 700 */
+    --ring: 346.8 77.2% 49.8%;
+  }
+
   .dark {
     /* Deep obsidian-ink background */
     --background: 224 71% 4%;
@@ -97,6 +118,21 @@
     --border: 217.2 32.6% 15%;
     --input: 217.2 32.6% 15%;
     --ring: 224.3 76.3% 48%;
+  }
+
+  .dark[data-theme='royal'] {
+    --primary: 263.4 70% 50.4%;
+    --accent: 47.9 95.8% 53.1%;
+  }
+
+  .dark[data-theme='emerald'] {
+    --primary: 158.1 64.1% 51.6%;
+    --accent: 187.9 92.4% 48.4%;
+  }
+
+  .dark[data-theme='rose'] {
+    --primary: 346.8 87.2% 60.8%;
+    --accent: 350.5 70.3% 55%;
   }
 }
 

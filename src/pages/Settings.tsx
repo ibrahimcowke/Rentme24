@@ -19,7 +19,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 
 const Settings: React.FC = () => {
   const { i18n } = useTranslation();
-  const { theme, setTheme } = useTheme();
+  const { mode, setMode, colorTheme, setColorTheme } = useTheme();
 
   return (
     <div className="max-w-6xl space-y-10 animate-in slide-in-from-bottom-4 duration-500 pb-12">
@@ -75,31 +75,62 @@ const Settings: React.FC = () => {
                 <p className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-tight">Toggle the global visual environment of the GuriFlow platform.</p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                 {[
-                   { id: 'light', icon: Sun, label: 'Solar' },
-                   { id: 'dark', icon: Moon, label: 'Obsidian' },
-                   { id: 'system', icon: Monitor, label: 'Mirror' }
-                 ].map((t) => (
-                   <button
-                     key={t.id}
-                     onClick={() => setTheme(t.id as any)}
-                     className={cn(
-                       "flex flex-col items-center gap-4 p-6 rounded-4xl border-2 transition-all group/btn",
-                       theme === t.id 
-                         ? "bg-primary/5 border-primary text-primary shadow-lg shadow-primary/10" 
-                         : "bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-700/50 text-slate-400 hover:border-primary/30"
-                     )}
-                   >
-                     <div className={cn(
-                       "p-4 rounded-2xl transition-all",
-                       theme === t.id ? "bg-primary text-white" : "bg-white dark:bg-slate-900 group-hover/btn:bg-primary/10"
-                     )}>
-                        <t.icon size={24} />
-                     </div>
-                     <span className="text-[10px] font-black uppercase tracking-widest">{t.label}</span>
-                   </button>
-                 ))}
+              <div className="space-y-10">
+                <div className="space-y-4">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Visual Mode</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {[
+                      { id: 'light', icon: Sun, label: 'Solar' },
+                      { id: 'dark', icon: Moon, label: 'Obsidian' },
+                      { id: 'system', icon: Monitor, label: 'Mirror' }
+                    ].map((t) => (
+                      <button
+                        key={t.id}
+                        onClick={() => setMode(t.id as any)}
+                        className={cn(
+                          "flex flex-col items-center gap-4 p-6 rounded-4xl border-2 transition-all group/btn",
+                          mode === t.id 
+                            ? "bg-primary/5 border-primary text-primary shadow-lg shadow-primary/10" 
+                            : "bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-700/50 text-slate-400 hover:border-primary/30"
+                        )}
+                      >
+                        <div className={cn(
+                          "p-4 rounded-2xl transition-all",
+                          mode === t.id ? "bg-primary text-white" : "bg-white dark:bg-slate-900 group-hover/btn:bg-primary/10"
+                        )}>
+                            <t.icon size={24} />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-widest">{t.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Design Language</h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    {[
+                      { id: 'default', label: 'Corporate', color: 'bg-blue-600' },
+                      { id: 'royal', label: 'Royal', color: 'bg-purple-600' },
+                      { id: 'emerald', label: 'Emerald', color: 'bg-emerald-600' },
+                      { id: 'rose', label: 'Rose', color: 'bg-rose-600' }
+                    ].map((t) => (
+                      <button
+                        key={t.id}
+                        onClick={() => setColorTheme(t.id as any)}
+                        className={cn(
+                          "flex items-center gap-3 p-4 rounded-2xl border-2 transition-all",
+                          colorTheme === t.id 
+                            ? "border-primary bg-primary/5 text-primary" 
+                            : "border-slate-100 dark:border-slate-800/50 hover:border-primary/30 text-slate-500 dark:text-slate-400"
+                        )}
+                      >
+                         <div className={cn("w-6 h-6 rounded-lg shadow-inner", t.color)} />
+                         <span className="text-[10px] font-black uppercase tracking-widest">{t.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               <div className="p-6 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-slate-100 dark:border-slate-800/50">

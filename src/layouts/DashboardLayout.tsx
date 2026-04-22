@@ -14,14 +14,11 @@ import {
   BarChart3,
   Globe,
   ChevronRight,
-  Sparkles,
-  Sun,
-  Moon
+  Sparkles
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
-import { useTheme } from '@/contexts/ThemeContext';
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'common.dashboard', path: '/' },
@@ -36,7 +33,6 @@ const sidebarItems = [
 
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { theme } = useTheme();
   const { t, i18n } = useTranslation();
   const location = useLocation();
 

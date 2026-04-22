@@ -1,7 +1,6 @@
 import React from 'react';
 import { 
   Building, 
-  MapPin, 
   Globe, 
   Shield, 
   Bell, 
@@ -17,7 +16,8 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/utils/cn';
-import { useTheme, ThemeType } from '@/contexts/ThemeContext';
+import { useTheme } from '@/contexts/ThemeContext';
+import type { ThemeType } from '@/contexts/ThemeContext';
 
 const Settings: React.FC = () => {
   const { i18n } = useTranslation();
@@ -91,7 +91,7 @@ const Settings: React.FC = () => {
                      key={t.id}
                      onClick={() => setTheme(t.id)}
                      className={cn(
-                       "flex items-center gap-5 p-6 rounded-[2rem] border-2 transition-all text-left relative overflow-hidden group/theme",
+                       "flex items-center gap-5 p-6 rounded-4xl border-2 transition-all text-left relative overflow-hidden group/theme",
                        theme === t.id 
                          ? "border-primary bg-primary/5 ring-4 ring-primary/5" 
                          : "border-slate-100 dark:border-slate-800 hover:border-primary/30 bg-white dark:bg-slate-900"

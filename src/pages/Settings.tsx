@@ -9,17 +9,27 @@ import {
   Trash2,
   Save,
   Languages,
-  Sun,
+  Leaf,
+  Crown,
   Moon,
-  Monitor
+  Sun,
+  Flame
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/utils/cn';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme, ThemeType } from '@/contexts/ThemeContext';
 
 const Settings: React.FC = () => {
   const { i18n } = useTranslation();
-  const { mode, setMode, colorTheme, setColorTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+
+  const themes: { id: ThemeType; label: string; icon: any; color: string; desc: string }[] = [
+    { id: 'classic', label: 'Classic Vault', icon: Sun, color: 'bg-blue-600', desc: 'Standard business trust interface' },
+    { id: 'forest', label: 'Forest Wild', icon: Leaf, color: 'bg-emerald-600', desc: 'Serene greenery for calm management' },
+    { id: 'royal', label: 'Royal Legacy', icon: Crown, color: 'bg-purple-600', desc: 'Elegant purple & gold high-tier ui' },
+    { id: 'sunset', label: 'Sunset Horizon', icon: Flame, color: 'bg-orange-500', desc: 'Warm gradients for evening audits' },
+    { id: 'midnight', label: 'Midnight Ops', icon: Moon, color: 'bg-slate-900', desc: 'Tethered shadows for deep focus' },
+  ];
 
   return (
     <div className="max-w-6xl space-y-10 animate-in slide-in-from-bottom-4 duration-500 pb-12">
@@ -65,84 +75,54 @@ const Settings: React.FC = () => {
         <div className="lg:col-span-3 space-y-8">
           {/* Appearance Section */}
           <div className="glass-card p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-10 text-slate-100 dark:text-slate-800 pointer-events-none group-hover:rotate-12 transition-transform duration-700">
+            <div className="absolute top-0 right-0 p-10 text-slate-100 dark:text-slate-800/10 pointer-events-none group-hover:rotate-12 transition-transform duration-700">
                <Palette size={120} />
             </div>
             
             <div className="relative z-10 space-y-8">
               <div>
-                <h3 className="text-xl font-black mb-2 dark:text-white italic">Theme Architecture</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-tight">Toggle the global visual environment of the GuriFlow platform.</p>
+                <h3 className="text-xl font-black mb-2 dark:text-white italic">Atmospheric Environment</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-tight">Select a global visual preset to match your current operational focus.</p>
               </div>
 
-              <div className="space-y-10">
-                <div className="space-y-4">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Visual Mode</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {[
-                      { id: 'light', icon: Sun, label: 'Solar' },
-                      { id: 'dark', icon: Moon, label: 'Obsidian' },
-                      { id: 'system', icon: Monitor, label: 'Mirror' }
-                    ].map((t) => (
-                      <button
-                        key={t.id}
-                        onClick={() => setMode(t.id as any)}
-                        className={cn(
-                          "flex flex-col items-center gap-4 p-6 rounded-4xl border-2 transition-all group/btn",
-                          mode === t.id 
-                            ? "bg-primary/5 border-primary text-primary shadow-lg shadow-primary/10" 
-                            : "bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-700/50 text-slate-400 hover:border-primary/30"
-                        )}
-                      >
-                        <div className={cn(
-                          "p-4 rounded-2xl transition-all",
-                          mode === t.id ? "bg-primary text-white" : "bg-white dark:bg-slate-900 group-hover/btn:bg-primary/10"
-                        )}>
-                            <t.icon size={24} />
-                        </div>
-                        <span className="text-[10px] font-black uppercase tracking-widest">{t.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Design Language</h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    {[
-                      { id: 'default', label: 'Corporate', color: 'bg-blue-600' },
-                      { id: 'royal', label: 'Royal', color: 'bg-purple-600' },
-                      { id: 'emerald', label: 'Emerald', color: 'bg-emerald-600' },
-                      { id: 'rose', label: 'Rose', color: 'bg-rose-600' }
-                    ].map((t) => (
-                      <button
-                        key={t.id}
-                        onClick={() => setColorTheme(t.id as any)}
-                        className={cn(
-                          "flex items-center gap-3 p-4 rounded-2xl border-2 transition-all",
-                          colorTheme === t.id 
-                            ? "border-primary bg-primary/5 text-primary" 
-                            : "border-slate-100 dark:border-slate-800/50 hover:border-primary/30 text-slate-500 dark:text-slate-400"
-                        )}
-                      >
-                         <div className={cn("w-6 h-6 rounded-lg shadow-inner", t.color)} />
-                         <span className="text-[10px] font-black uppercase tracking-widest">{t.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                 {themes.map((t) => (
+                   <button
+                     key={t.id}
+                     onClick={() => setTheme(t.id)}
+                     className={cn(
+                       "flex items-center gap-5 p-6 rounded-[2rem] border-2 transition-all text-left relative overflow-hidden group/theme",
+                       theme === t.id 
+                         ? "border-primary bg-primary/5 ring-4 ring-primary/5" 
+                         : "border-slate-100 dark:border-slate-800 hover:border-primary/30 bg-white dark:bg-slate-900"
+                     )}
+                   >
+                     <div className={cn(
+                       "w-14 h-14 rounded-2xl flex items-center justify-center transition-all",
+                       theme === t.id ? "bg-primary text-white scale-110 shadow-lg shadow-primary/30" : "bg-slate-100 dark:bg-slate-800 text-slate-400 group-hover/theme:bg-primary/10 group-hover/theme:text-primary"
+                     )}>
+                        <t.icon size={24} />
+                     </div>
+                     <div className="flex-1">
+                        <p className={cn("text-xs font-black uppercase tracking-widest", theme === t.id ? "text-primary" : "text-slate-600 dark:text-slate-200")}>{t.label}</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight mt-1">{t.desc}</p>
+                     </div>
+                     <div className={cn("absolute bottom-0 right-0 w-12 h-12 translate-x-4 translate-y-4 opacity-10", t.color)} />
+                   </button>
+                 ))}
               </div>
 
-              <div className="p-6 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-slate-100 dark:border-slate-800/50">
-                 <div className="flex items-center justify-between">
-                    <div>
-                       <p className="text-sm font-black dark:text-slate-100">Motion Reduction</p>
-                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Optimize interface for stability</p>
+              <div className="p-6 bg-slate-100 dark:bg-slate-950/50 rounded-3xl border border-slate-200 dark:border-slate-800/50 flex items-center justify-between">
+                 <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-indigo-500/10 text-indigo-500 rounded-xl flex items-center justify-center">
+                       <Palette size={20} />
                     </div>
-                    <div className="w-12 h-6 bg-slate-200 dark:bg-slate-800 rounded-full p-1 flex justify-start cursor-pointer transition-all">
-                       <div className="w-4 h-4 bg-white rounded-full shadow-sm" />
+                    <div>
+                       <p className="text-sm font-black dark:text-slate-100 uppercase tracking-tighter">Current Schema</p>
+                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{theme.toUpperCase()} - ALPHA PROTOCOL</p>
                     </div>
                  </div>
+                 <div className="px-4 py-2 bg-emerald-500/10 text-emerald-500 rounded-lg text-[10px] font-black uppercase tracking-widest">Active</div>
               </div>
             </div>
           </div>
@@ -191,28 +171,6 @@ const Settings: React.FC = () => {
                   <option className="bg-white dark:bg-slate-900">SOS (Sh.So) - National</option>
                 </select>
               </div>
-            </div>
-          </div>
-
-          {/* Company Section */}
-          <div className="glass-card p-10 rounded-[3rem] border border-white/20 dark:border-slate-800/50 shadow-2xl">
-            <h3 className="text-xl font-black mb-8 dark:text-white italic">Entity Profile</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Registry Name</label>
-                   <input type="text" defaultValue="GuriFlow Global Ltd" className="w-full px-6 py-4 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-black text-sm dark:text-slate-100" />
-                </div>
-                <div className="space-y-4">
-                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Tax Identity</label>
-                   <input type="text" defaultValue="SO-99281-FLOW" className="w-full px-6 py-4 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-black text-sm dark:text-slate-100" />
-                </div>
-                <div className="sm:col-span-2 space-y-4">
-                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Global HQ</label>
-                   <div className="relative">
-                      <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                      <input type="text" defaultValue="Diplomatic Wing, Maka Al-Mukarama, Mogadishu" className="w-full pl-12 pr-6 py-4 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-black text-sm dark:text-slate-100" />
-                   </div>
-                </div>
             </div>
           </div>
         </div>

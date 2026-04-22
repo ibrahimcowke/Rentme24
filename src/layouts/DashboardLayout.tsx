@@ -36,7 +36,7 @@ const sidebarItems = [
 
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { toggleTheme, isDark } = useTheme();
+  const { theme } = useTheme();
   const { t, i18n } = useTranslation();
   const location = useLocation();
 
@@ -165,18 +165,6 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
            </div>
 
            <div className="flex items-center gap-4">
-              {/* Premium Dark Mode Toggle */}
-              <button 
-                onClick={toggleTheme}
-                className="p-2.5 bg-slate-100/50 dark:bg-slate-800/50 rounded-xl hover:bg-primary/10 hover:text-primary transition-all text-slate-500 relative group"
-              >
-                {isDark ? (
-                  <Sun size={20} className="group-hover:rotate-45 transition-transform" />
-                ) : (
-                  <Moon size={20} className="group-hover:-rotate-12 transition-transform" />
-                )}
-                <span className="absolute inset-0 bg-primary/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-              </button>
 
               <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full border border-emerald-500/20">
                  <Sparkles size={14} className="animate-pulse" />

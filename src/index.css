@@ -39,123 +39,93 @@
   :root {
     --background: 210 40% 98%;
     --foreground: 222.2 84% 4.9%;
-
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
+    --popover: 210 40% 98%;
     --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 221.2 83.2% 53.3%;
+    --primary: 221.2 83.2% 53.3%; /* Classic Blue */
     --primary-foreground: 210 40% 98%;
-
     --secondary: 199 89% 48%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
     --accent: 172 66% 40%;
     --accent-foreground: 210 40% 98%;
-
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
-
-    --radius: 1rem;
+    --radius: 1.25rem;
   }
 
-  /* Royal Theme (Purple/Gold) */
+  /* Forest Theme */
+  [data-theme='forest'] {
+    --background: 120 20% 98%;
+    --foreground: 144 60% 10%;
+    --card: 120 25% 100%;
+    --primary: 142.1 76.2% 36.3%; /* Emerald 600 */
+    --primary-foreground: 120 20% 98%;
+    --accent: 160 84.1% 39.4%; /* Teal */
+    --secondary: 142 70% 95%;
+    --border: 142 30% 90%;
+    --ring: 142.1 76.2% 36.3%;
+  }
+
+  /* Royal Theme */
   [data-theme='royal'] {
+    --background: 260 20% 98%;
+    --foreground: 260 60% 10%;
     --primary: 262.1 83.3% 57.8%; /* Purple 600 */
-    --accent: 45.4 93.4% 47.5%; /* Gold/Amber 600 */
+    --primary-foreground: 210 40% 98%;
+    --accent: 45.4 93.4% 47.5%; /* Gold */
     --ring: 262.1 83.3% 57.8%;
+    --border: 260 30% 90%;
   }
 
-  /* Emerald Theme (Emerald/Teal) */
-  [data-theme='emerald'] {
-    --primary: 160.1 84.1% 39.4%; /* Emerald 600 */
-    --accent: 188.7 94.5% 42.7%; /* Teal 600 */
-    --ring: 160.1 84.1% 39.4%;
-  }
-
-  /* Rose Theme (Rose/Crimson) */
-  [data-theme='rose'] {
+  /* Sunset Theme */
+  [data-theme='sunset'] {
+    --background: 30 40% 98%;
+    --foreground: 20 60% 10%;
     --primary: 346.8 77.2% 49.8%; /* Rose 600 */
-    --accent: 350.5 70.3% 40.2%; /* Crimson 700 */
+    --primary-foreground: 30 40% 98%;
+    --accent: 25 95% 53%; /* Orange */
     --ring: 346.8 77.2% 49.8%;
+    --border: 30 30% 90%;
   }
 
-  .dark {
-    /* Deep obsidian-ink background */
+  /* Midnight Theme (Full Dark) */
+  [data-theme='midnight'], .dark {
     --background: 224 71% 4%;
     --foreground: 210 40% 98%;
-
     --card: 222 47% 7%;
     --card-foreground: 210 40% 98%;
-
     --popover: 224 71% 4%;
     --popover-foreground: 210 40% 98%;
-
     --primary: 217.2 91.2% 59.8%;
     --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 199 89% 48%;
+    --secondary: 217.2 32.6% 12%;
     --secondary-foreground: 210 40% 98%;
-
     --muted: 217.2 32.6% 12%;
     --muted-foreground: 215 20.2% 65.1%;
-
     --accent: 172 66% 45%;
     --accent-foreground: 210 40% 98%;
-
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 217.2 32.6% 15%;
     --input: 217.2 32.6% 15%;
     --ring: 224.3 76.3% 48%;
-  }
-
-  .dark[data-theme='royal'] {
-    --primary: 263.4 70% 50.4%;
-    --accent: 47.9 95.8% 53.1%;
-  }
-
-  .dark[data-theme='emerald'] {
-    --primary: 158.1 64.1% 51.6%;
-    --accent: 187.9 92.4% 48.4%;
-  }
-
-  .dark[data-theme='rose'] {
-    --primary: 346.8 87.2% 60.8%;
-    --accent: 350.5 70.3% 55%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border outline-none transition-colors duration-300;
+    @apply border-border outline-none transition-all duration-300;
   }
   body {
     @apply bg-background text-foreground selection:bg-primary/20;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
-  }
-
-  /* Custom Scrollbar for Premium Feel */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    @apply bg-slate-200 dark:bg-slate-800 rounded-full hover:bg-primary/50 transition-colors;
   }
 }
 
@@ -163,33 +133,25 @@
   @apply bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl border border-white/20 dark:border-white/5 shadow-2xl;
 }
 
-.premium-gradient {
-  background: linear-gradient(135deg, #2563EB 0%, #0EA5E9 100%);
-}
-
 .text-gradient {
-  @apply bg-clip-text text-transparent bg-linear-to-r from-blue-600 to-sky-500 font-black;
-}
-
-.text-gradient-gold {
-  @apply bg-clip-text text-transparent bg-linear-to-r from-amber-400 via-amber-200 to-yellow-500 font-black;
-}
-
-@keyframes float {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(1deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
-}
-
-.animate-float {
-  animation: float 5s ease-in-out infinite;
+  @apply bg-clip-text text-transparent bg-linear-to-r from-primary to-accent font-black;
 }
 
 .glow-primary {
-  @apply shadow-[0_0_20px_rgba(37,99,235,0.2)] dark:shadow-[0_0_30px_rgba(37,99,235,0.3)];
+  @apply shadow-[0_0_20px_rgba(var(--primary),0.2)];
 }
 
-/* Custom Scrollbar Hide but keep functional */
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 dark:bg-slate-800 rounded-full hover:bg-primary/50 transition-colors;
+}
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }

@@ -257,7 +257,11 @@ const Properties: React.FC = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="group glass-card rounded-4xl overflow-hidden border border-white/20 shadow-2xl flex flex-col md:flex-row relative"
+                onClick={() => {
+                   setSelectedProperty(prop);
+                   setIsDetailModalOpen(true);
+                }}
+                className="group glass-card rounded-4xl overflow-hidden border border-white/20 shadow-2xl flex flex-col md:flex-row relative cursor-pointer hover:border-primary/50 transition-all"
               >
                 <div className="relative h-64 overflow-hidden">
                   <img src={prop.image} alt={prop.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -271,7 +275,10 @@ const Properties: React.FC = () => {
                       {prop.status}
                     </span>
                     <button 
-                      onClick={() => toggleCompare(prop.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleCompare(prop.id);
+                      }}
                       className={cn(
                         "p-2 rounded-xl backdrop-blur-md border transition-all",
                         compareList.includes(prop.id) ? "bg-primary border-primary text-white" : "bg-white/10 border-white/20 text-white"
@@ -317,13 +324,17 @@ const Properties: React.FC = () => {
                   <div className="pt-6 border-t border-white/10 flex items-center justify-between">
                      <div className="flex items-center gap-4">
                          <button 
-                           onClick={() => handleOpenEdit(prop)}
+                           onClick={(e) => {
+                             e.stopPropagation();
+                             handleOpenEdit(prop);
+                           }}
                            className="p-3 glass text-primary rounded-xl hover:bg-primary hover:text-white transition-all shadow-sm"
                          >
                             <Edit3 size={18} />
                          </button>
                          <button 
-                           onClick={() => {
+                           onClick={(e) => {
+                             e.stopPropagation();
                              if(confirm("Are you sure you want to remove this asset?")) {
                                 deleteProperty(prop.id);
                                 addToast("Asset removed from registry.", "info");
@@ -335,7 +346,8 @@ const Properties: React.FC = () => {
                          </button>
                      </div>
                      <button 
-                        onClick={() => {
+                        onClick={(e) => {
+                           e.stopPropagation();
                            setSelectedProperty(prop);
                            setIsDetailModalOpen(true);
                         }}
@@ -364,7 +376,14 @@ const Properties: React.FC = () => {
             </thead>
             <tbody className="divide-y divide-white/10">
               {filteredProperties.map((prop) => (
-                <tr key={prop.id} className="hover:bg-white/5 transition-all group">
+                <tr 
+                  key={prop.id} 
+                  onClick={() => {
+                     setSelectedProperty(prop);
+                     setIsDetailModalOpen(true);
+                  }}
+                  className="hover:bg-white/5 transition-all group cursor-pointer"
+                >
                   <td className="px-8 py-6">
                     <div className="flex items-center gap-5">
                       <div className="w-16 h-12 rounded-xl overflow-hidden shadow-md group-hover:scale-110 transition-transform">
@@ -391,13 +410,17 @@ const Properties: React.FC = () => {
                    <td className="px-8 py-6 text-right">
                     <div className="flex items-center justify-end gap-3">
                       <button 
-                        onClick={() => handleOpenEdit(prop)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenEdit(prop);
+                        }}
                         className="p-3 glass text-primary rounded-xl hover:bg-primary hover:text-white transition-all shadow-sm"
                       >
                          <Edit3 size={18} />
                       </button>
                       <button 
-                        onClick={() => {
+                        onClick={(e) => {
+                           e.stopPropagation();
                            setSelectedProperty(prop);
                            setIsDetailModalOpen(true);
                         }}
@@ -483,14 +506,37 @@ const Properties: React.FC = () => {
               </div>
             )}
 
-            <div className="flex gap-4 pt-6">
+            <div className="flex gap-3 pt-6">
                <button 
                  onClick={() => addToast('Comprehensive Property Audit generated...', 'success')}
                  className="flex-1 py-4.5 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all glow-primary"
                >
-                  Download Full Audit
+                  Download Audit
                </button>
-               <button onClick={() => setIsDetailModalOpen(false)} className="px-10 py-4.5 glass text-slate-900 dark:text-white rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">
+               <button 
+                 onClick={() => {
+                    setIsDetailModalOpen(false);
+                    handleOpenEdit(selectedProperty);
+                 }}
+                 className="px-5 py-4.5 glass text-primary rounded-3xl hover:bg-primary hover:text-white transition-all shadow-sm flex items-center justify-center tooltip-trigger"
+                 title="Edit Asset"
+               >
+                  <Edit3 size={18} />
+               </button>
+               <button 
+                 onClick={() => {
+                    if(confirm("Are you sure you want to remove this asset?")) {
+                       deleteProperty(selectedProperty.id);
+                       addToast("Asset removed from registry.", "info");
+                       setIsDetailModalOpen(false);
+                    }
+                 }}
+                 className="px-5 py-4.5 glass text-rose-500 rounded-3xl hover:bg-rose-500 hover:text-white transition-all shadow-sm flex items-center justify-center tooltip-trigger"
+                 title="Delete Asset"
+               >
+                  <Trash2 size={18} />
+               </button>
+               <button onClick={() => setIsDetailModalOpen(false)} className="px-8 py-4.5 glass text-slate-900 dark:text-white rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">
                   Close
                </button>
             </div>

@@ -24,6 +24,8 @@ const brokers = [
 const Brokers: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedBroker, setSelectedBroker] = useState<any>(null);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const filteredBrokers = brokers.filter(b => b.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
@@ -142,7 +144,15 @@ const Brokers: React.FC = () => {
                   </div>
                 </div>
 
-                <button className="w-full py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all dark:text-slate-300 hover:text-primary dark:hover:text-primary">View Performance Profile</button>
+                <button 
+                  onClick={() => {
+                     setSelectedBroker(broker);
+                     setIsProfileModalOpen(true);
+                  }}
+                  className="w-full py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all dark:text-slate-300 hover:text-primary dark:hover:text-primary"
+                >
+                  View Performance Profile
+                </button>
               </div>
             </motion.div>
           ))}
@@ -182,6 +192,92 @@ const Brokers: React.FC = () => {
             Initiate Partnership
           </button>
         </form>
+      </Modal>
+
+      {/* Broker Profile Modal */}
+      <Modal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} title="Performance Audit">
+        {selectedBroker && (
+          <div className="space-y-8 pb-4">
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <div className="w-24 h-24 rounded-4xl bg-linear-to-tr from-primary to-indigo-500 p-1 shadow-xl">
+                 <div className="w-full h-full rounded-[1.75rem] bg-white dark:bg-slate-900 border-4 border-white dark:border-slate-900 overflow-hidden">
+                    <img src={selectedBroker.avatar} alt={selectedBroker.name} className="w-full h-full object-cover" />
+                 </div>
+              </div>
+              <div className="text-center sm:text-left">
+                 <h3 className="text-3xl font-black tracking-tighter dark:text-white uppercase">{selectedBroker.name}</h3>
+                 <div className="flex items-center justify-center sm:justify-start gap-2 text-slate-400 font-bold uppercase text-[10px] tracking-[0.2em] mt-1">
+                    <MapPin size={14} className="text-primary" />
+                    Licensed Broker • Mogadishu
+                 </div>
+                 <div className="mt-4 flex flex-wrap gap-2 justify-center sm:justify-start">
+                   <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 text-amber-600 rounded-xl">
+                     <Star size={14} fill="currentColor" />
+                     <span className="text-[10px] font-black">{selectedBroker.rating} Rating</span>
+                   </div>
+                   <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-xl">
+                     <ShieldCheck size={14} />
+                     <span className="text-[10px] font-black">Top Performer</span>
+                   </div>
+                 </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+               <div className="p-5 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border border-slate-100 dark:border-slate-700">
+                  <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Managed Portfolio</p>
+                  <p className="text-2xl font-black dark:text-white uppercase">{selectedBroker.units} Units</p>
+               </div>
+               <div className="p-5 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border border-slate-100 dark:border-slate-700">
+                  <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">Success Score</p>
+                  <p className="text-2xl font-black text-primary uppercase">{selectedBroker.score}%</p>
+               </div>
+            </div>
+
+            <div className="p-6 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border border-slate-100 dark:border-slate-700 space-y-5">
+               <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em]">Operational Metrics</h4>
+               
+               <div className="space-y-2">
+                 <div className="flex justify-between text-xs font-bold dark:text-slate-200">
+                   <span>Tenant Retention</span>
+                   <span>94%</span>
+                 </div>
+                 <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                   <div className="h-full bg-emerald-500 rounded-full" style={{ width: '94%' }} />
+                 </div>
+               </div>
+
+               <div className="space-y-2">
+                 <div className="flex justify-between text-xs font-bold dark:text-slate-200">
+                   <span>Lease Closing Rate</span>
+                   <span>88%</span>
+                 </div>
+                 <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                   <div className="h-full bg-indigo-500 rounded-full" style={{ width: '88%' }} />
+                 </div>
+               </div>
+
+               <div className="space-y-2">
+                 <div className="flex justify-between text-xs font-bold dark:text-slate-200">
+                   <span>Client Satisfaction</span>
+                   <span>{selectedBroker.score}%</span>
+                 </div>
+                 <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                   <div className="h-full bg-primary rounded-full" style={{ width: `${selectedBroker.score}%` }} />
+                 </div>
+               </div>
+            </div>
+
+            <div className="flex gap-4 pt-4">
+               <button onClick={() => alert('Detailed report dispatched.')} className="flex-1 py-4 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all glow-primary">
+                  Export Full Report
+               </button>
+               <button onClick={() => setIsProfileModalOpen(false)} className="px-8 py-4 bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">
+                  Close
+               </button>
+            </div>
+          </div>
+        )}
       </Modal>
     </motion.div>
   );

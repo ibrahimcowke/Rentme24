@@ -9,7 +9,6 @@ import {
   ShieldCheck, 
   Clock, 
   ArrowRight,
-  Plus,
   Brain,
   TrendingUp,
   Zap,
@@ -97,13 +96,7 @@ const Dashboard: React.FC = () => {
             Dashboard <span className="text-primary italic">Overview</span>
           </h1>
         </div>
-        
-        <div className="flex items-center gap-3">
-           <button className="px-6 py-3 bg-primary text-white rounded-2xl font-bold text-sm shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
-             <Plus size={18} />
-             Add New Asset
-           </button>
-        </div>
+
       </div>
 
       {/* Core KPIs with Glass Style */}

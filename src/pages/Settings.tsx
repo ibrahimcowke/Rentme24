@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Building, 
   Globe, 
@@ -22,6 +22,7 @@ import type { ThemeType } from '@/contexts/ThemeContext';
 const Settings: React.FC = () => {
   const { i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
+  const [activeTab, setActiveTab] = useState('theme');
 
   const themes: { id: ThemeType; label: string; icon: any; color: string; desc: string }[] = [
     { id: 'classic', label: 'Classic Vault', icon: Sun, color: 'bg-blue-600', desc: 'Standard business trust interface' },
@@ -57,12 +58,13 @@ const Settings: React.FC = () => {
           ].map((item, i) => (
             <button 
               key={i}
+              onClick={() => setActiveTab(item.id)}
               className={cn(
                 "w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all font-black text-[10px] uppercase tracking-widest",
-                i === 1 
-                  ? "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl text-primary" 
+                activeTab === item.id 
+                  ? (item.danger ? "bg-rose-500 text-white shadow-xl glow-primary" : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl text-primary")
                   : "text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-900/50",
-                item.danger && "text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/10 border-transparent hover:border-rose-500/20 border"
+                item.danger && activeTab !== item.id && "text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/10 border-transparent hover:border-rose-500/20 border"
               )}
             >
               <item.icon size={20} strokeWidth={2.5} />
@@ -73,8 +75,22 @@ const Settings: React.FC = () => {
 
         {/* Content Area */}
         <div className="lg:col-span-3 space-y-8">
+          
+          {/* Company Profile Section */}
+          {activeTab === 'profile' && (
+            <div className="glass-card p-10 rounded-[3rem] border border-white/20 dark:border-slate-800/50 shadow-2xl">
+              <h3 className="text-xl font-black dark:text-white italic mb-2">Company Profile</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Update your business information and operational details.</p>
+              <div className="mt-8 p-6 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border border-slate-100 dark:border-slate-800/50 flex flex-col items-center justify-center text-slate-400">
+                <Building size={48} className="mb-4 opacity-20" />
+                <p className="text-[10px] font-black uppercase tracking-widest">Profile Configuration coming soon</p>
+              </div>
+            </div>
+          )}
+
           {/* Appearance Section */}
-          <div className="glass-card p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group">
+          {activeTab === 'theme' && (
+            <div className="glass-card p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-10 text-slate-100 dark:text-slate-800/10 pointer-events-none group-hover:rotate-12 transition-transform duration-700">
                <Palette size={120} />
             </div>
@@ -125,10 +141,11 @@ const Settings: React.FC = () => {
                  <div className="px-4 py-2 bg-emerald-500/10 text-emerald-500 rounded-lg text-[10px] font-black uppercase tracking-widest">Active</div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Localization Section */}
-          <div className="glass-card p-10 rounded-[3rem] border border-white/20 dark:border-slate-800/50 shadow-2xl">
+          {activeTab === 'local' && (
+            <div className="glass-card p-10 rounded-[3rem] border border-white/20 dark:border-slate-800/50 shadow-2xl">
             <div className="flex items-center justify-between mb-10">
               <div>
                 <h3 className="text-xl font-black dark:text-white italic">Localization</h3>
@@ -172,7 +189,55 @@ const Settings: React.FC = () => {
                 </select>
               </div>
             </div>
-          </div>
+          )}
+
+          {/* Notifications Section */}
+          {activeTab === 'notify' && (
+            <div className="glass-card p-10 rounded-[3rem] border border-white/20 dark:border-slate-800/50 shadow-2xl">
+              <h3 className="text-xl font-black dark:text-white italic mb-2">Notifications</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Manage alert preferences and system communications.</p>
+              <div className="mt-8 p-6 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border border-slate-100 dark:border-slate-800/50 flex flex-col items-center justify-center text-slate-400">
+                <Bell size={48} className="mb-4 opacity-20" />
+                <p className="text-[10px] font-black uppercase tracking-widest">Notification Channels coming soon</p>
+              </div>
+            </div>
+          )}
+
+          {/* Security Section */}
+          {activeTab === 'security' && (
+            <div className="glass-card p-10 rounded-[3rem] border border-white/20 dark:border-slate-800/50 shadow-2xl">
+              <h3 className="text-xl font-black dark:text-white italic mb-2">Security</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Enforce access controls and monitor security events.</p>
+              <div className="mt-8 p-6 bg-slate-50 dark:bg-slate-800/30 rounded-3xl border border-slate-100 dark:border-slate-800/50 flex flex-col items-center justify-center text-slate-400">
+                <Shield size={48} className="mb-4 opacity-20" />
+                <p className="text-[10px] font-black uppercase tracking-widest">Access Controls coming soon</p>
+              </div>
+            </div>
+          )}
+
+          {/* Danger Zone Section */}
+          {activeTab === 'danger' && (
+            <div className="glass-card p-10 rounded-[3rem] border border-rose-500/20 bg-rose-500/5 shadow-2xl">
+              <h3 className="text-xl font-black text-rose-500 italic mb-2">Danger Zone</h3>
+              <p className="text-xs text-rose-500/70 font-medium">Irreversible destructive actions and system resets.</p>
+              <div className="mt-8 space-y-4">
+                 <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-rose-500/20 flex items-center justify-between">
+                    <div>
+                       <p className="text-sm font-black dark:text-slate-100">Purge Operational Cache</p>
+                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Clears temporary storage and state</p>
+                    </div>
+                    <button className="px-6 py-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 transition-all">Clear Cache</button>
+                 </div>
+                 <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-rose-500/20 flex items-center justify-between">
+                    <div>
+                       <p className="text-sm font-black dark:text-slate-100">Reset System Settings</p>
+                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Revert to factory configurations</p>
+                    </div>
+                    <button className="px-6 py-2 bg-rose-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 transition-all shadow-lg shadow-rose-500/20 glow-primary">Reset All</button>
+                 </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

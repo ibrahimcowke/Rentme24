@@ -100,7 +100,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Core KPIs with Glass Style */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { title: 'Total Revenue', value: `$${stats.totalRevenue.toLocaleString()}`, trend: '+12.5%', icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
           { title: 'Active Units', value: stats.activeUnits.toString(), trend: '+4%', icon: Building2, color: 'text-blue-500', bg: 'bg-blue-500/10' },
@@ -134,7 +134,7 @@ const Dashboard: React.FC = () => {
           <Brain className="text-primary animate-pulse" size={24} />
           <h2 className="text-2xl font-black italic dark:text-white">AI Property Insights</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {aiInsights.map((insight, i) => (
             <div key={i} className="glass-card p-6 rounded-3xl border border-white/20 hover:scale-[1.02] transition-all group cursor-pointer">
               <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:rotate-12 shadow-lg", insight.bg, insight.color)}>

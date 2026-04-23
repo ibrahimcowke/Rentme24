@@ -33,7 +33,7 @@ const Settings: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-6xl space-y-10 animate-in slide-in-from-bottom-4 duration-500 pb-12">
+    <div className="max-w-[1600px] space-y-10 animate-in slide-in-from-bottom-4 duration-500 pb-12">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div>
           <h2 className="text-4xl font-black tracking-tighter dark:text-white uppercase italic">System <span className="text-primary italic">Command</span></h2>

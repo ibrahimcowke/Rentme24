@@ -60,8 +60,11 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   useEffect(() => {
-    if (isMobile) setIsSidebarOpen(false);
-  }, [location.pathname, isMobile]);
+    if (isMobile) {
+      // On mobile, we start with the mini sidebar for that landscape feel
+      setIsSidebarOpen(false);
+    }
+  }, [isMobile]);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'so' : 'en';
@@ -73,23 +76,12 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
       {/* Animated Mesh Background */}
       <div className="bg-mesh" />
 
-      {/* Mobile Overlay */}
-      <AnimatePresence>
-        {isMobile && isSidebarOpen && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsSidebarOpen(false)}
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40"
-          />
-        )}
-      </AnimatePresence>
+
 
       <aside 
         className={cn(
-          "fixed md:static inset-y-0 left-0 z-50 transform transition-all duration-500 ease-in-out glass dark:bg-black/40 border-r border-white/20 dark:border-white/5",
-          isSidebarOpen ? "w-72 translate-x-0" : "w-20 -translate-x-full md:translate-x-0"
+          "fixed inset-y-0 left-0 z-50 transform transition-all duration-500 ease-in-out glass dark:bg-black/40 border-r border-white/20 dark:border-white/5",
+          isSidebarOpen ? "w-72" : "w-20"
         )}
       >
         <div className="flex flex-col h-full">
@@ -176,7 +168,12 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col relative h-screen overflow-y-auto">
+      <main 
+        className={cn(
+          "flex-1 flex flex-col relative h-screen overflow-y-auto transition-all duration-500",
+          isSidebarOpen ? "pl-72" : "pl-20"
+        )}
+      >
         <header className="h-20 flex items-center justify-between px-4 md:px-8 sticky top-0 bg-white/40 dark:bg-black/40 backdrop-blur-2xl z-30 border-b border-white/10">
            <div className="flex items-center gap-6 flex-1">
               <button 

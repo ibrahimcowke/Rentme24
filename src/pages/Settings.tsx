@@ -141,6 +141,7 @@ const Settings: React.FC = () => {
                  <div className="px-4 py-2 bg-emerald-500/10 text-emerald-500 rounded-lg text-[10px] font-black uppercase tracking-widest">Active</div>
               </div>
             </div>
+          </div>
           )}
 
           {/* Localization Section */}
@@ -189,6 +190,7 @@ const Settings: React.FC = () => {
                 </select>
               </div>
             </div>
+          </div>
           )}
 
           {/* Notifications Section */}

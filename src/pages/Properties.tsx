@@ -438,22 +438,26 @@ const Properties: React.FC = () => {
       )}
 
       {/* Asset Deep Review Modal - Enhanced with Glass */}
-      <Modal isOpen={isDetailModalOpen} onClose={() => setIsDetailModalOpen(false)} title="Asset Audit Analysis">
+      <Modal isOpen={isDetailModalOpen} onClose={() => setIsDetailModalOpen(false)} title="Asset Audit Analysis" maxWidth="5xl">
         {selectedProperty && (
-          <div className="space-y-8 pb-4">
-            <div className="flex flex-col sm:flex-row gap-8">
-              <div className="w-full sm:w-64 h-40 rounded-4xl overflow-hidden shadow-2xl ring-4 ring-white/10">
-                <img src={selectedProperty.image} alt={selectedProperty.name} className="w-full h-full object-cover" />
+          <div className="flex flex-col lg:flex-row gap-12 pb-4">
+            {/* Left Column - Media & Core Info */}
+            <div className="lg:w-[360px] space-y-8 shrink-0">
+              <div className="w-full aspect-4/5 rounded-[3rem] overflow-hidden shadow-2xl ring-1 ring-white/10 group relative">
+                <img src={selectedProperty.image} alt={selectedProperty.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-linear-to-t from-slate-950/60 to-transparent" />
               </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-3">
-                   <h3 className="text-4xl font-black tracking-tighter dark:text-white uppercase">{selectedProperty.name}</h3>
+              
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-5xl font-black tracking-tighter dark:text-white uppercase leading-none mb-4 italic">{selectedProperty.name}</h3>
+                  <div className="flex items-center gap-2 text-slate-400 font-bold uppercase text-xs tracking-widest">
+                    <MapPin size={16} className="text-primary" />
+                    {selectedProperty.district} • {selectedProperty.code}
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-slate-400 font-bold uppercase text-[10px] tracking-[0.2em]">
-                   <MapPin size={14} className="text-primary" />
-                   {selectedProperty.district} • {selectedProperty.code}
-                </div>
-                <div className="mt-6 flex gap-4">
+
+                <div className="flex flex-wrap gap-3">
                   <div className="flex items-center gap-2 px-4 py-2 glass rounded-2xl">
                     <Sparkles size={14} className="text-amber-500" />
                     <span className="text-[10px] font-black uppercase text-amber-500">Premium Listing</span>
@@ -466,79 +470,93 @@ const Properties: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-               {[
-                 { label: 'Annual Yield', value: `$${(selectedProperty.rent * 12).toLocaleString()}`, icon: TrendingUp, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-                 { label: 'Market Velocity', value: 'High', icon: Activity, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
-                 { label: 'Asset Health', value: '98%', icon: ShieldCheck, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-               ].map((stat, i) => (
-                 <div key={i} className="p-6 glass rounded-3xl border border-white/5">
-                    <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg", stat.bg, stat.color)}>
-                       <stat.icon size={22} />
-                    </div>
-                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">{stat.label}</p>
-                    <p className="text-2xl font-black dark:text-white uppercase tracking-tighter">{stat.value}</p>
-                 </div>
-               ))}
-            </div>
+            {/* Right Column - Performance & Specifications */}
+            <div className="flex-1 space-y-10">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                 {[
+                   { label: 'Annual Yield', value: `$${(selectedProperty.rent * 12).toLocaleString()}`, icon: TrendingUp, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+                   { label: 'Market Velocity', value: 'High', icon: Activity, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+                   { label: 'Asset Health', value: '98%', icon: ShieldCheck, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+                 ].map((stat, i) => (
+                   <div key={i} className="p-6 glass rounded-3xl border border-white/5 hover:bg-white/5 transition-all">
+                      <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg", stat.bg, stat.color)}>
+                         <stat.icon size={22} />
+                      </div>
+                      <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">{stat.label}</p>
+                      <p className="text-2xl font-black dark:text-white uppercase tracking-tighter">{stat.value}</p>
+                   </div>
+                 ))}
+              </div>
 
-            {/* Residential Specifications */}
-            {(selectedProperty.type === 'house' || selectedProperty.type === 'apartment') && (
-              <div className="p-8 glass rounded-[2.5rem] border border-white/10 shadow-inner">
-                 <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.2em] mb-8 text-center">Interior Matrix</h4>
-                 <div className="grid grid-cols-3 gap-8">
-                    <div className="flex flex-col items-center gap-3">
-                       <div className="p-4 glass rounded-2xl text-primary"><DoorOpen size={24} /></div>
-                       <span className="text-2xl font-black dark:text-white">{selectedProperty.rooms || 0}</span>
-                       <span className="text-[10px] font-bold text-slate-500 uppercase">Rooms</span>
-                    </div>
-                    <div className="flex flex-col items-center gap-3 border-x border-white/10">
-                       <div className="p-4 glass rounded-2xl text-primary"><Utensils size={24} /></div>
-                       <span className="text-2xl font-black dark:text-white">{selectedProperty.kitchens || 0}</span>
-                       <span className="text-[10px] font-bold text-slate-500 uppercase">Kitchen</span>
-                    </div>
-                    <div className="flex flex-col items-center gap-3">
-                       <div className="p-4 glass rounded-2xl text-primary"><Bath size={24} /></div>
-                       <span className="text-2xl font-black dark:text-white">{selectedProperty.toilets || 0}</span>
-                       <span className="text-[10px] font-bold text-slate-500 uppercase">Toilet</span>
-                    </div>
+              {/* Residential Specifications */}
+              {(selectedProperty.type === 'house' || selectedProperty.type === 'apartment') && (
+                <div className="p-10 glass rounded-[3rem] border border-white/10 shadow-inner relative overflow-hidden">
+                   <div className="absolute top-0 right-0 p-8 opacity-5">
+                      <Building2 size={80} />
+                   </div>
+                   <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-[0.3em] mb-10 text-center">Interior Matrix Architecture</h4>
+                   <div className="grid grid-cols-3 gap-8">
+                      <div className="flex flex-col items-center gap-4 group">
+                         <div className="p-5 glass rounded-3xl text-primary transition-transform group-hover:scale-110 group-hover:rotate-6"><DoorOpen size={28} /></div>
+                         <div className="text-center">
+                            <span className="text-3xl font-black dark:text-white block">{selectedProperty.rooms || 0}</span>
+                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Rooms</span>
+                         </div>
+                      </div>
+                      <div className="flex flex-col items-center gap-4 group border-x border-white/10">
+                         <div className="p-5 glass rounded-3xl text-primary transition-transform group-hover:scale-110 group-hover:-rotate-6"><Utensils size={28} /></div>
+                         <div className="text-center">
+                            <span className="text-3xl font-black dark:text-white block">{selectedProperty.kitchens || 0}</span>
+                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Kitchen</span>
+                         </div>
+                      </div>
+                      <div className="flex flex-col items-center gap-4 group">
+                         <div className="p-5 glass rounded-3xl text-primary transition-transform group-hover:scale-110 group-hover:rotate-6"><Bath size={28} /></div>
+                         <div className="text-center">
+                            <span className="text-3xl font-black dark:text-white block">{selectedProperty.toilets || 0}</span>
+                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Toilet</span>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+              )}
+
+              <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                 <button 
+                   onClick={() => addToast('Comprehensive Property Audit generated...', 'success')}
+                   className="flex-1 py-4.5 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all glow-primary"
+                 >
+                    Download Full Audit
+                 </button>
+                 <div className="flex gap-3">
+                    <button 
+                      onClick={() => {
+                         setIsDetailModalOpen(false);
+                         handleOpenEdit(selectedProperty);
+                      }}
+                      className="px-6 py-4.5 glass text-primary rounded-3xl hover:bg-primary hover:text-white transition-all shadow-sm flex items-center justify-center tooltip-trigger"
+                      title="Edit Asset"
+                    >
+                       <Edit3 size={18} />
+                    </button>
+                    <button 
+                      onClick={() => {
+                         if(confirm("Are you sure you want to remove this asset?")) {
+                            deleteProperty(selectedProperty.id);
+                            addToast("Asset removed from registry.", "info");
+                            setIsDetailModalOpen(false);
+                         }
+                      }}
+                      className="px-6 py-4.5 glass text-rose-500 rounded-3xl hover:bg-rose-500 hover:text-white transition-all shadow-sm flex items-center justify-center tooltip-trigger"
+                      title="Delete Asset"
+                    >
+                       <Trash2 size={18} />
+                    </button>
+                    <button onClick={() => setIsDetailModalOpen(false)} className="px-8 py-4.5 glass text-slate-900 dark:text-white rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">
+                       Close
+                    </button>
                  </div>
               </div>
-            )}
-
-            <div className="flex gap-3 pt-6">
-               <button 
-                 onClick={() => addToast('Comprehensive Property Audit generated...', 'success')}
-                 className="flex-1 py-4.5 bg-primary text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all glow-primary"
-               >
-                  Download Audit
-               </button>
-               <button 
-                 onClick={() => {
-                    setIsDetailModalOpen(false);
-                    handleOpenEdit(selectedProperty);
-                 }}
-                 className="px-5 py-4.5 glass text-primary rounded-3xl hover:bg-primary hover:text-white transition-all shadow-sm flex items-center justify-center tooltip-trigger"
-                 title="Edit Asset"
-               >
-                  <Edit3 size={18} />
-               </button>
-               <button 
-                 onClick={() => {
-                    if(confirm("Are you sure you want to remove this asset?")) {
-                       deleteProperty(selectedProperty.id);
-                       addToast("Asset removed from registry.", "info");
-                       setIsDetailModalOpen(false);
-                    }
-                 }}
-                 className="px-5 py-4.5 glass text-rose-500 rounded-3xl hover:bg-rose-500 hover:text-white transition-all shadow-sm flex items-center justify-center tooltip-trigger"
-                 title="Delete Asset"
-               >
-                  <Trash2 size={18} />
-               </button>
-               <button onClick={() => setIsDetailModalOpen(false)} className="px-8 py-4.5 glass text-slate-900 dark:text-white rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">
-                  Close
-               </button>
             </div>
           </div>
         )}

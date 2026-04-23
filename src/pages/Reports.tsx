@@ -45,7 +45,8 @@ const distributionData = [
 import { useToast } from '@/components/Toasts';
 
 const Reports: React.FC = () => {
-  const { isDark } = useTheme();
+  const { theme } = useTheme();
+  const isDark = theme === 'midnight';
   const { addToast } = useToast();
 
   const handleExport = () => {

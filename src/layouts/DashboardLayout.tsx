@@ -18,7 +18,9 @@ import {
   Bell,
   Search,
   MessageSquare,
-  AlertCircle
+  AlertCircle,
+  Folder,
+  Calendar as CalendarIcon
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -30,6 +32,8 @@ const sidebarItems = [
   { icon: Users, label: 'common.tenants', path: '/tenants' },
   { icon: CreditCard, label: 'common.payments', path: '/payments' },
   { icon: MessageSquare, label: 'common.communication', path: '/communication' },
+  { icon: Folder, label: 'common.documents', path: '/documents' },
+  { icon: CalendarIcon, label: 'common.calendar', path: '/calendar' },
   { icon: Wrench, label: 'common.maintenance', path: '/maintenance' },
   { icon: UserSquare2, label: 'common.brokers', path: '/brokers' },
   { icon: BarChart3, label: 'common.reports', path: '/reports' },

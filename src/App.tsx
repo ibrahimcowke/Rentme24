@@ -10,6 +10,8 @@ import Settings from './pages/Settings';
 import Maintenance from './pages/Maintenance';
 import Reports from './pages/Reports';
 import Communication from './pages/Communication';
+import Documents from './pages/Documents';
+import Calendar from './pages/Calendar';
 import './translations/i18n';
 
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -30,6 +32,8 @@ const App: React.FC = () => {
             <Route path="/payments" element={<Payments />} />
             <Route path="/maintenance" element={<Maintenance />} />
             <Route path="/communication" element={<Communication />} />
+            <Route path="/documents" element={<Documents />} />
+            <Route path="/calendar" element={<Calendar />} />
             <Route path="/brokers" element={<Brokers />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/settings" element={<Settings />} />

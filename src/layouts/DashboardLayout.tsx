@@ -20,7 +20,6 @@ import {
   MessageSquare,
   AlertCircle,
   Folder,
-  Package,
   Calendar as CalendarIcon
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -37,7 +36,6 @@ const sidebarItems = [
   { icon: Folder, label: 'common.documents', path: '/documents' },
   { icon: CalendarIcon, label: 'common.calendar', path: '/calendar' },
   { icon: Wrench, label: 'common.maintenance', path: '/maintenance' },
-  { icon: Package, label: 'common.inventory', path: '/inventory' },
   { icon: UserSquare2, label: 'common.brokers', path: '/brokers' },
   { icon: BarChart3, label: 'common.reports', path: '/reports' },
   { icon: Settings, label: 'common.settings', path: '/settings' },

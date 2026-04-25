@@ -5,7 +5,6 @@ import {
   AlertCircle, 
   CheckCircle2, 
   Hammer,
-  ArrowRight,
   Filter,
   Wrench,
   Zap,
@@ -14,23 +13,44 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
 import Modal from '@/components/Modal';
-
-const tickets = [
-  { id: 'TKT-101', property: 'Villa Hodan', issue: 'Leaking pipe in kitchen', priority: 'high', status: 'pending', date: '2h ago', technician: 'Ahmed' },
-  { id: 'TKT-102', property: 'Blue Sky Apt', issue: 'AC unit not functional', priority: 'medium', status: 'in-progress', date: '5h ago', technician: 'Mohamed' },
-  { id: 'TKT-103', property: 'Commercial Hub', issue: 'elevator inspection', priority: 'low', status: 'completed', date: 'Yesterday', technician: 'Yasin' },
-];
+import { useData } from '@/contexts/DataContext';
 
 const Maintenance: React.FC = () => {
+  const { maintenanceTickets, properties, addMaintenanceTicket, updateMaintenanceTicket, stats } = useData();
   const [filter, setFilter] = useState<'all' | 'pending' | 'in-progress' | 'completed'>('all');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const filteredTickets = tickets.filter(t => filter === 'all' || t.status === filter);
+  const filteredTickets = maintenanceTickets.filter(t => filter === 'all' || t.status === filter);
+
+  const [formData, setFormData] = useState({
+    propertyId: properties[0]?.id || '',
+    issue: '',
+    priority: 'medium' as any,
+    cost: '',
+    technician: 'Ahmed'
+  });
 
   const handleCreateTicket = (e: React.FormEvent) => {
     e.preventDefault();
+    const property = properties.find(p => p.id === formData.propertyId);
+    addMaintenanceTicket({
+      ...formData,
+      propertyName: property?.name || 'Unknown',
+      cost: Number(formData.cost) || 0
+    });
     setIsAddModalOpen(false);
-    alert('Support ticket successfully dispatched to the technician pool.');
+    setFormData({
+      propertyId: properties[0]?.id || '',
+      issue: '',
+      priority: 'medium',
+      cost: '',
+      technician: 'Ahmed'
+    });
+  };
+
+  const toggleStatus = (id: string, currentStatus: string) => {
+    const nextStatus = currentStatus === 'pending' ? 'in-progress' : currentStatus === 'in-progress' ? 'completed' : 'pending';
+    updateMaintenanceTicket(id, { status: nextStatus });
   };
 
   return (
@@ -50,7 +70,7 @@ const Maintenance: React.FC = () => {
           <p className="text-sm text-slate-500 dark:text-slate-400 font-medium tracking-tight">Coordinate support requests and technical asset servicing.</p>
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <div className="flex glass p-1.5 rounded-2xl border border-white/10 shadow-inner">
              {['all', 'pending', 'in-progress', 'completed'].map((f) => (
                <button 
@@ -113,7 +133,7 @@ const Maintenance: React.FC = () => {
                       <div className="p-2 glass rounded-xl text-amber-500">
                         <AlertCircle size={16} />
                       </div>
-                      <span className="font-bold dark:text-slate-200">{ticket.property}</span>
+                      <span className="font-bold dark:text-slate-200">{ticket.propertyName}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="p-2 glass rounded-xl text-slate-400">
@@ -125,21 +145,31 @@ const Maintenance: React.FC = () => {
                 </div>
                 
                 <div className="flex md:flex-col justify-between items-end border-t md:border-t-0 md:border-l border-white/10 pt-6 md:pt-0 md:pl-8 relative z-10">
-                   <div className={cn(
-                     "px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-lg border",
-                     ticket.status === 'completed' ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" :
-                     ticket.status === 'in-progress' ? "bg-blue-500/10 text-blue-600 border-blue-500/20" :
-                     "bg-amber-500/10 text-amber-600 border-amber-500/20"
-                   )}>
+                   <div 
+                     onClick={() => toggleStatus(ticket.id, ticket.status)}
+                     className={cn(
+                       "px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-lg border cursor-pointer hover:scale-105 transition-all",
+                       ticket.status === 'completed' ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" :
+                       ticket.status === 'in-progress' ? "bg-blue-500/10 text-blue-600 border-blue-500/20" :
+                       "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                     )}
+                   >
                       {ticket.status === 'completed' && <CheckCircle2 size={14} />}
                       {ticket.status}
                    </div>
-                   <button className="p-4 glass rounded-2xl hover:bg-amber-600 text-slate-400 hover:text-white transition-all shadow-xl">
-                      <ArrowRight size={20} />
-                   </button>
+                   <div className="text-right">
+                      <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Est. Cost</p>
+                      <p className="text-xl font-black dark:text-white">${ticket.cost}</p>
+                   </div>
                 </div>
               </motion.div>
             ))}
+            {filteredTickets.length === 0 && (
+              <div className="py-20 flex flex-col items-center justify-center text-slate-400 opacity-20">
+                <Wrench size={64} className="mb-4" />
+                <p className="text-xl font-black uppercase tracking-widest">No Tickets Found</p>
+              </div>
+            )}
           </AnimatePresence>
         </div>
 
@@ -147,12 +177,12 @@ const Maintenance: React.FC = () => {
            <div className="glass-card p-10 rounded-[3rem] bg-linear-to-br from-amber-500 to-orange-600 text-white relative overflow-hidden shadow-2xl glow-primary">
               <div className="absolute top-0 right-0 p-8 opacity-20 rotate-12"><Wrench size={120} /></div>
               <h3 className="text-3xl font-black tracking-tighter mb-4 italic">Maintenance <span className="text-white/80">Pulse</span></h3>
-              <p className="text-sm font-medium text-white/80 mb-8 leading-relaxed">System monitoring indicates optimal performance with average resolution time under <span className="text-white font-black underline decoration-2 underline-offset-4">4 hours</span>.</p>
+              <p className="text-sm font-medium text-white/80 mb-8 leading-relaxed">System monitoring indicates <span className="text-white font-black underline decoration-2 underline-offset-4">{stats.activeMaintenance}</span> active tasks requiring technical resolution.</p>
               <div className="space-y-4">
                  {[
-                   { label: 'Active Tasks', value: '42', icon: Zap },
-                   { label: 'Idle Techs', value: '08', icon: Hammer },
-                   { label: 'CSAT Score', value: '98%', icon: ShieldAlert },
+                   { label: 'Active Tasks', value: stats.activeMaintenance.toString(), icon: Zap },
+                   { label: 'Total Resolved', value: maintenanceTickets.filter(t => t.status === 'completed').length.toString(), icon: CheckCircle2 },
+                   { label: 'Total Expense', value: `$${stats.totalExpenses.toLocaleString()}`, icon: ShieldAlert },
                  ].map((s, i) => (
                    <div key={i} className="flex justify-between items-center p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 group cursor-pointer hover:bg-white/20 transition-all">
                       <div className="flex items-center gap-3">
@@ -187,30 +217,52 @@ const Maintenance: React.FC = () => {
         <form onSubmit={handleCreateTicket} className="space-y-6">
           <div className="space-y-2">
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Affected Asset</label>
-            <select required className="w-full px-5 py-3.5 glass border border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 transition-all font-bold dark:text-white appearance-none">
-                 <option className="bg-slate-900">Villa Hodan - Unit 202</option>
-                 <option className="bg-slate-900">Blue Sky Apt - Unit 105</option>
-                 <option className="bg-slate-900">Commercial Hub - Ground Floor</option>
+            <select 
+              required 
+              value={formData.propertyId}
+              onChange={(e) => setFormData({...formData, propertyId: e.target.value})}
+              className="w-full px-5 py-3.5 glass border border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 transition-all font-bold dark:text-white appearance-none"
+            >
+              {properties.map(p => (
+                <option key={p.id} value={p.id} className="bg-slate-900">{p.name}</option>
+              ))}
             </select>
           </div>
 
           <div className="space-y-2">
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Issue Intelligence</label>
-            <textarea required placeholder="Describe the technical failure..." className="w-full h-32 px-5 py-4 glass border border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 transition-all font-bold resize-none dark:text-white" />
+            <textarea 
+              required 
+              placeholder="Describe the technical failure..." 
+              value={formData.issue}
+              onChange={(e) => setFormData({...formData, issue: e.target.value})}
+              className="w-full h-32 px-5 py-4 glass border border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 transition-all font-bold resize-none dark:text-white" 
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Priority Stream</label>
-              <select required className="w-full px-5 py-3.5 glass border border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 transition-all font-bold dark:text-white appearance-none">
-                 <option key="low" value="low" className="bg-slate-900">Low Impact</option>
-                 <option key="medium" value="medium" className="bg-slate-900">Medium Urgency</option>
-                 <option key="high" value="high" className="bg-slate-900">High Velocity (Critical)</option>
+              <select 
+                required 
+                value={formData.priority}
+                onChange={(e) => setFormData({...formData, priority: e.target.value as any})}
+                className="w-full px-5 py-3.5 glass border border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 transition-all font-bold dark:text-white appearance-none"
+              >
+                 <option value="low" className="bg-slate-900">Low Impact</option>
+                 <option value="medium" className="bg-slate-900">Medium Urgency</option>
+                 <option value="high" className="bg-slate-900">High Velocity (Critical)</option>
               </select>
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Estimate ($)</label>
-              <input type="number" placeholder="50" className="w-full px-5 py-3.5 glass border border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 transition-all font-bold dark:text-white" />
+              <input 
+                type="number" 
+                placeholder="50" 
+                value={formData.cost}
+                onChange={(e) => setFormData({...formData, cost: e.target.value})}
+                className="w-full px-5 py-3.5 glass border border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 transition-all font-bold dark:text-white" 
+              />
             </div>
           </div>
 

@@ -41,10 +41,35 @@ export interface Transaction {
   status: 'completed' | 'pending';
 }
 
+export interface Asset {
+  id: string;
+  propertyId: string;
+  propertyName: string;
+  name: string;
+  category: 'Furniture' | 'Appliances' | 'Electronics' | 'Other';
+  condition: 'Excellent' | 'Good' | 'Fair' | 'Poor';
+  value: number;
+  purchaseDate: string;
+}
+
+export interface MaintenanceTicket {
+  id: string;
+  propertyId: string;
+  propertyName: string;
+  issue: string;
+  priority: 'low' | 'medium' | 'high';
+  status: 'pending' | 'in-progress' | 'completed';
+  technician: string;
+  cost: number;
+  date: string;
+}
+
 interface DataContextType {
   properties: Property[];
   tenants: Tenant[];
   transactions: Transaction[];
+  maintenanceTickets: MaintenanceTicket[];
+  assets: Asset[];
   addProperty: (property: Omit<Property, 'id' | 'status' | 'image'>) => void;
   updateProperty: (id: string, updates: Partial<Property>) => void;
   deleteProperty: (id: string) => void;
@@ -52,11 +77,18 @@ interface DataContextType {
   updateTenant: (id: string, updates: Partial<Tenant>) => void;
   deleteTenant: (id: string) => void;
   addTransaction: (transaction: Omit<Transaction, 'id' | 'date'>) => void;
+  addMaintenanceTicket: (ticket: Omit<MaintenanceTicket, 'id' | 'date' | 'status'>) => void;
+  updateMaintenanceTicket: (id: string, updates: Partial<MaintenanceTicket>) => void;
+  addAsset: (asset: Omit<Asset, 'id'>) => void;
+  deleteAsset: (id: string) => void;
   stats: {
     totalRevenue: number;
+    totalExpenses: number;
+    netProfit: number;
     activeUnits: number;
     occupancyRate: number;
     pendingPayments: number;
+    activeMaintenance: number;
   };
 }
 
@@ -89,11 +121,30 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     ];
   });
 
+  const [maintenanceTickets, setMaintenanceTickets] = useState<MaintenanceTicket[]>(() => {
+    const saved = localStorage.getItem('rentme-maintenance');
+    return saved ? JSON.parse(saved) : [
+      { id: 'TKT-101', propertyId: '1', propertyName: 'Villa Hodan', issue: 'Leaking pipe in kitchen', priority: 'high', status: 'pending', technician: 'Ahmed', cost: 45, date: '2024-03-24' },
+      { id: 'TKT-102', propertyId: '2', propertyName: 'Blue Sky Apt', issue: 'AC unit not functional', priority: 'medium', status: 'in-progress', technician: 'Mohamed', cost: 120, date: '2024-03-23' },
+    ];
+  });
+
+  const [assets, setAssets] = useState<Asset[]>(() => {
+    const saved = localStorage.getItem('rentme-assets');
+    return saved ? JSON.parse(saved) : [
+      { id: 'AST-001', propertyId: '1', propertyName: 'Villa Hodan', name: 'LG Smart Fridge', category: 'Appliances', condition: 'Excellent', value: 850, purchaseDate: '2023-12-15' },
+      { id: 'AST-002', propertyId: '1', propertyName: 'Villa Hodan', name: 'Samsung 55" TV', category: 'Electronics', condition: 'Good', value: 600, purchaseDate: '2024-01-10' },
+      { id: 'AST-003', propertyId: '2', propertyName: 'Blue Sky Apt', name: 'Daikin AC Unit', category: 'Appliances', condition: 'Fair', value: 450, purchaseDate: '2022-06-20' },
+    ];
+  });
+
   useEffect(() => {
     localStorage.setItem('rentme-properties', JSON.stringify(properties));
     localStorage.setItem('rentme-tenants', JSON.stringify(tenants));
     localStorage.setItem('rentme-transactions', JSON.stringify(transactions));
-  }, [properties, tenants, transactions]);
+    localStorage.setItem('rentme-maintenance', JSON.stringify(maintenanceTickets));
+    localStorage.setItem('rentme-assets', JSON.stringify(assets));
+  }, [properties, tenants, transactions, maintenanceTickets, assets]);
 
   const addProperty = (prop: Omit<Property, 'id' | 'status' | 'image'>) => {
     const newProp: Property = {
@@ -150,11 +201,45 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const addMaintenanceTicket = (ticket: Omit<MaintenanceTicket, 'id' | 'date' | 'status'>) => {
+    const newTicket: MaintenanceTicket = {
+      ...ticket,
+      id: `TKT-${Math.floor(Math.random() * 1000)}`,
+      date: new Date().toISOString().split('T')[0],
+      status: 'pending'
+    };
+    setMaintenanceTickets(prev => [newTicket, ...prev]);
+  };
+
+  const updateMaintenanceTicket = (id: string, updates: Partial<MaintenanceTicket>) => {
+    setMaintenanceTickets(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
+  };
+
+  const addAsset = (asset: Omit<Asset, 'id'>) => {
+    const newAsset: Asset = {
+      ...asset,
+      id: `AST-${Math.floor(Math.random() * 1000)}`
+    };
+    setAssets(prev => [...prev, newAsset]);
+  };
+
+  const deleteAsset = (id: string) => {
+    setAssets(prev => prev.filter(a => a.id !== id));
+  };
+
+  const totalRevenue = transactions.reduce((acc, tx) => tx.status === 'completed' ? acc + tx.amount : acc, 0);
+  const totalMaintenanceExpenses = maintenanceTickets
+    .filter(t => t.status === 'completed')
+    .reduce((acc, t) => acc + t.cost, 0);
+
   const stats = {
-    totalRevenue: transactions.reduce((acc, tx) => tx.status === 'completed' ? acc + tx.amount : acc, 0),
+    totalRevenue,
+    totalExpenses: totalMaintenanceExpenses,
+    netProfit: totalRevenue - totalMaintenanceExpenses,
     activeUnits: properties.length,
     occupancyRate: Math.round((properties.filter(p => p.status === 'occupied').length / properties.length) * 100) || 0,
-    pendingPayments: transactions.filter(tx => tx.status === 'pending').reduce((acc, tx) => acc + tx.amount, 0)
+    pendingPayments: transactions.filter(tx => tx.status === 'pending').reduce((acc, tx) => acc + tx.amount, 0),
+    activeMaintenance: maintenanceTickets.filter(t => t.status !== 'completed').length
   };
 
   return (
@@ -162,6 +247,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       properties, 
       tenants, 
       transactions, 
+      maintenanceTickets,
+      assets,
       addProperty, 
       updateProperty, 
       deleteProperty,
@@ -169,6 +256,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateTenant,
       deleteTenant,
       addTransaction,
+      addMaintenanceTicket,
+      updateMaintenanceTicket,
+      addAsset,
+      deleteAsset,
       stats
     }}>
       {children}
@@ -183,3 +274,4 @@ export const useData = () => {
   }
   return context;
 };
+

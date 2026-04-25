@@ -8,6 +8,7 @@ import Payments from './pages/Payments';
 import Brokers from './pages/Brokers';
 import Settings from './pages/Settings';
 import Maintenance from './pages/Maintenance';
+import Inventory from './pages/Inventory';
 import Reports from './pages/Reports';
 import Communication from './pages/Communication';
 import Documents from './pages/Documents';
@@ -31,6 +32,7 @@ const App: React.FC = () => {
             <Route path="/tenants" element={<Tenants />} />
             <Route path="/payments" element={<Payments />} />
             <Route path="/maintenance" element={<Maintenance />} />
+            <Route path="/inventory" element={<Inventory />} />
             <Route path="/communication" element={<Communication />} />
             <Route path="/documents" element={<Documents />} />
             <Route path="/calendar" element={<Calendar />} />

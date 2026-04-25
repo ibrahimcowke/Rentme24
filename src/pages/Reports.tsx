@@ -26,32 +26,32 @@ import {
   Pie
 } from 'recharts';
 import { useTheme } from '@/contexts/ThemeContext';
-
-const revenueData = [
-  { month: 'Jan', revenue: 45000, expenses: 22000 },
-  { month: 'Feb', revenue: 52000, expenses: 24000 },
-  { month: 'Mar', revenue: 48000, expenses: 21000 },
-  { month: 'Apr', revenue: 61000, expenses: 28000 },
-  { month: 'May', revenue: 55000, expenses: 26000 },
-  { month: 'Jun', revenue: 67000, expenses: 30000 },
-];
-
-const distributionData = [
-  { name: 'Residential', value: 65, color: '#2563EB' },
-  { name: 'Commercial', value: 25, color: '#10B981' },
-  { name: 'Industrial', value: 10, color: '#F59E0B' },
-];
-
+import { useData } from '@/contexts/DataContext';
 import { useToast } from '@/components/Toasts';
 
 const Reports: React.FC = () => {
   const { theme } = useTheme();
+  const { stats } = useData();
   const isDark = theme === 'midnight';
   const { addToast } = useToast();
 
   const handleExport = () => {
     addToast('Financial Ledger exported successfully as PDF.', 'success');
   };
+
+  const revenueData = [
+    { month: 'Jan', revenue: 4500, expenses: 1200 },
+    { month: 'Feb', revenue: 5200, expenses: 1400 },
+    { month: 'Mar', revenue: 4800, expenses: 1100 },
+    { month: 'Apr', revenue: 6100, expenses: 1800 },
+    { month: 'May', revenue: stats.totalRevenue, expenses: stats.totalExpenses },
+  ];
+
+  const distributionData = [
+    { name: 'Residential', value: 65, color: '#2563EB' },
+    { name: 'Commercial', value: 25, color: '#10B981' },
+    { name: 'Industrial', value: 10, color: '#F59E0B' },
+  ];
 
   return (
     <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-700 pb-12">
@@ -83,9 +83,9 @@ const Reports: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
-          { title: 'Total Revenue', value: '$328,500', trend: '+12.5%', isUp: true, icon: TrendingUp },
-          { title: 'Net Profit', value: '$142,200', trend: '+18.2%', isUp: true, icon: DollarSign },
-          { title: 'Total Expenses', value: '$186,300', trend: '-2.4%', isUp: false, icon: TrendingDown },
+          { title: 'Total Revenue', value: `$${stats.totalRevenue.toLocaleString()}`, trend: '+12.5%', isUp: true, icon: TrendingUp },
+          { title: 'Net Profit', value: `$${stats.netProfit.toLocaleString()}`, trend: '+18.2%', isUp: true, icon: DollarSign },
+          { title: 'Total Expenses', value: `$${stats.totalExpenses.toLocaleString()}`, trend: '-2.4%', isUp: false, icon: TrendingDown },
         ].map((card, i) => (
           <motion.div
             key={i}

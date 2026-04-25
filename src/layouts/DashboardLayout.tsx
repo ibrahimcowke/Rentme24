@@ -20,11 +20,13 @@ import {
   MessageSquare,
   AlertCircle,
   Folder,
+  Package,
   Calendar as CalendarIcon
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/utils/cn';
+import { useData } from '@/contexts/DataContext';
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'common.dashboard', path: '/' },
@@ -35,12 +37,14 @@ const sidebarItems = [
   { icon: Folder, label: 'common.documents', path: '/documents' },
   { icon: CalendarIcon, label: 'common.calendar', path: '/calendar' },
   { icon: Wrench, label: 'common.maintenance', path: '/maintenance' },
+  { icon: Package, label: 'common.inventory', path: '/inventory' },
   { icon: UserSquare2, label: 'common.brokers', path: '/brokers' },
   { icon: BarChart3, label: 'common.reports', path: '/reports' },
   { icon: Settings, label: 'common.settings', path: '/settings' },
 ];
 
 export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { stats } = useData();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -141,7 +145,12 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                     {t(item.label)}
                   </span>
                 )}
-                {isSidebarOpen && location.pathname === item.path && (
+                {isSidebarOpen && item.path === '/maintenance' && stats.activeMaintenance > 0 && (
+                  <span className="ml-auto mr-4 px-2 py-0.5 bg-rose-500 text-white text-[10px] font-black rounded-full shadow-lg shadow-rose-500/20">
+                    {stats.activeMaintenance}
+                  </span>
+                )}
+                {isSidebarOpen && location.pathname === item.path && item.path !== '/maintenance' && (
                   <ChevronRight size={14} className="ml-auto mr-4 opacity-50" />
                 )}
               </Link>
